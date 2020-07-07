@@ -9,6 +9,7 @@
   "dependencies": {
     "nprogress": "^0.2.0",
     "ol": "^6.3.1",
+    "ol-hashed": "^2.0.0",
     "phoenix": "file:../deps/phoenix",
     "phoenix_html": "file:../deps/phoenix_html",
     "phoenix_live_view": "file:../deps/phoenix_live_view"
