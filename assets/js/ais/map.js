@@ -1,3 +1,4 @@
+//<-- Imports
 import "../../css/map.scss"
 import 'ol/ol.css';
 
@@ -18,41 +19,13 @@ import {createStringXY} from 'ol/coordinate';
 import {fromLonLat} from 'ol/proj';
 
 import sync from 'ol-hashed';
-
-const mousePositionControl = new MousePosition({
-  coordinateFormat: createStringXY(4),
-  projection: 'EPSG:3857',
-  // comment the following two lines to have the mouse position
-  // be placed within the map.
-  // className: 'custom-mouse-position',
-  // target: document.getElementById('mouse-position'),
-  undefinedHTML: '&nbsp;'
-});
-
-const osmLayer = new TileLayer({
-    source: new OSM()
-});
-const focusSource = new VectorSource();
-const focusLayer = new VectorLayer({
-    source: focusSource,
-    style: new Style({
-        image: new RegularShape({
-            fill: new Fill({color: 'rgba(255, 255, 255, 0)'}),
-            stroke: new Stroke({
-                color: 'red',
-                width: 1,
-            }),
-            points: 4,
-            radius: 20,
-            angle: Math.PI / 4,
-        })
-    })
-})
+//-->
 
 const focusArrayBuffer = new ArrayBuffer(Float32Array.BYTES_PER_ELEMENT);
 const selectedFeature = new DataView(focusArrayBuffer);
 selectedFeature.setInt32(0,-1);
 
+//<-- Webgl attributes
 // We need size, angle, color, shape to properly draw a ship
 const customLayerAttributes = [{
     name: 'size',
@@ -87,7 +60,8 @@ const customLayerAttributes = [{
 }
 ];
 const customLayerAttributeArrays = [];
-
+//-->
+//<-- Webgl uniforms
 function numTwoFloats(num){
     const significantDigits = 6;
 
@@ -105,17 +79,6 @@ function numTwoFloats(num){
 
     return [firstFloat, secondFloat];
 }
-function matrixTwoFloats(matrix){
-    const firstMatrix = new Array(6);
-    const secondMatrix = new Array(6);
-    for (let i = 0; i < matrix.length; i++){
-        const twoFloats = numTwoFloats(matrix[i]);
-        firstMatrix[i] = twoFloats[0];
-        secondMatrix[i] = twoFloats[1];
-    }
-    return [firstMatrix, secondMatrix];
-}
-let webglLayerRenderer;
 const uniforms = {
     u_selectedId: function(framestate){
         return selectedFeature.getFloat32(0);
@@ -156,120 +119,134 @@ const uniforms = {
         return transform;
     },
 };
-
-function fetchTemplate(url) {
+//-->
+//<--Shader promises
+function fetchShader(url) {
     return fetch(url).then(response => response.text())
 }
-const vertexShaderTemplate = fetchTemplate('/shaders/ais.vert');
-const fragmentShaderTemplate = fetchTemplate('/shaders/ais.frag');
-const hitVertexShaderTemplate = fetchTemplate('/shaders/hitais.vert');
-const hitFragmentShaderTemplate = fetchTemplate('/shaders/hitais.frag');
+const vertexShader = fetchShader('/shaders/ais.vert');
+const fragmentShader = fetchShader('/shaders/ais.frag');
+const hitVertexShader = fetchShader('/shaders/hitais.vert');
+const hitFragmentShader = fetchShader('/shaders/hitais.frag');
+//-->
 
-// not pretty...
-Promise.all([vertexShaderTemplate, fragmentShaderTemplate,
-    hitVertexShaderTemplate, hitFragmentShaderTemplate,
-    null])
-    .then(function(results){
-        return {
-            vertex: results[0],
-            fragment: results[1],
-            hitvertex: results[2],
-            hitfragment: results[3],
-            options: results[4],
+Promise.all([
+    vertexShader,
+    fragmentShaderTemplate,
+    hitVertexShader,
+    hitFragmentShaderTemplate
+]).then(function(results){
+    return {
+        vertex: results[0],
+        fragment: results[1],
+        hitvertex: results[2],
+        hitfragment: results[3],
+    }
+}).then(function(results){
+
+    //<-- Layers and sources
+    class CustomLayer extends VectorLayer{
+        createRenderer() {
+            const options = {
+                attributes: customLayerAttributes,
+                uniforms: uniforms,
+                vertexShader:  results.vertex,
+                fragmentShader: results.fragment,
+                hitVertexShader:  results.hitvertex,
+                hitFragmentShader: results.hitfragment,
+            };
+            console.log(options.hitVertexShader);
+            console.log(options.hitFragmentShader);
+            return new Renderer(this, options);
         }
-    }).then(function(results){
-        class CustomLayer extends VectorLayer{
-            createRenderer() {
-                const options = {
-                    attributes: customLayerAttributes,
-                    uniforms: uniforms,
-                    vertexShader:  results.vertex,
-                    fragmentShader: results.fragment,
-                    hitVertexShader:  results.hitvertex,
-                    hitFragmentShader: results.hitfragment,
-                };
-                console.log(options.hitVertexShader);
-                console.log(options.hitFragmentShader);
-                return new Renderer(this, options);
-            }
-        }
+    }
 
-        const webglSource = new VectorSource({
-            format: new GeoJSON(),
-            // url: 'http://192.168.8.157:8600/geoserver/ais/wms?service=WMS&version=1.1.1&request=GetMap&layers=ais%3Ashipinfos&bbox=-180.0%2C-90.0%2C180.0%2C90.0&width=768&height=384&srs=EPSG%3A4326&format=geojson&time=PT2H/PRESENT',
-            url: 'data/geojson/ais.json',
-            crossOrigin: 'anonymous',
-        });
-        const webglLayer = new CustomLayer({
-            source: webglSource,
-        });
-        webglLayerRenderer = webglLayer.getRenderer();
-        // webglLayer.isAisLayer = true;
-        const webglError = webglLayer.getRenderer().getShaderCompileErrors();
-        if (webglError) {
-            console.log(webglError)
-        }
+    const webglSource = new VectorSource({
+        format: new GeoJSON(),
+        // url: 'http://192.168.8.157:8600/geoserver/ais/wms?service=WMS&version=1.1.1&request=GetMap&layers=ais%3Ashipinfos&bbox=-180.0%2C-90.0%2C180.0%2C90.0&width=768&height=384&srs=EPSG%3A4326&format=geojson&time=PT2H/PRESENT',
+        url: 'data/geojson/ais.json',
+        crossOrigin: 'anonymous',
+    });
+    const webglLayer = new CustomLayer({
+        source: webglSource,
+    });
+    const webglError = webglLayer.getRenderer().getShaderCompileErrors();
+    if (webglError) {
+        console.log(webglError)
+    }
 
-        const map = new Map({
-            controls: defaultControls().extend([mousePositionControl]),
-            target: 'map',
-            interactions: defaultInteractions().extend([
-                new DragRotateAndZoom()
-            ]),
-            layers: [
-                osmLayer,
-                webglLayer,
-                focusLayer,
-            ],
-            view: new View({
-                center: fromLonLat([0, 0]),
-                zoom: 2
-            })
-        });
+    const osmLayer = new TileLayer({
+        source: new OSM()
+    });
+    //-->
 
-        const lvData = document.getElementById("liveview-data");
-        const isShowInfos = () =>
-            lvData.dataset.showInfos.toLowerCase() === "true";
+    const mousePositionControl = new MousePosition({
+        coordinateFormat: createStringXY(4),
+        projection: 'EPSG:3857',
+        // comment the following two lines to have the mouse position
+        // be placed within the map.
+        // className: 'custom-mouse-position',
+        // target: document.getElementById('mouse-position'),
+        undefinedHTML: '&nbsp;'
+    });
 
-        map.on('pointermove', function(evt) {
-            selectedFeature.setInt32(0,-1);
-            map.forEachFeatureAtPixel(evt.pixel, function(feature) {
-                selectedFeature.setInt32(0, parseInt(feature.getId().split('.')[1]));
+    const map = new Map({
+        controls: defaultControls().extend([mousePositionControl]),
+        target: 'map',
+        interactions: defaultInteractions().extend([
+            new DragRotateAndZoom()
+        ]),
+        layers: [
+            osmLayer,
+            webglLayer,
+        ],
+        view: new View({
+            center: fromLonLat([0, 0]),
+            zoom: 2
+        })
+    });
 
-                if (!isShowInfos()) return false;
+    //<-- map events
+    let isShowInfos = false;
 
-                // move that to live view
-                const positionStr = feature.get('geometry').getCoordinates().join(", ");
-                const filterKeys = ['time','name','callsign','imo','cog'];
-                const properties = feature.getKeys()
-                    .filter(k => filterKeys.includes(k))
-                    .map(k => `<li><b>${k}:</b> <i>${feature.get(k)}</i></li>`)
-                    .join('\n');
-                shipinfos.innerHTML = `<li><b>id:</b> <i>${feature.getId()}</i></li>\n
+    map.on('pointermove', function(evt) {
+        selectedFeature.setInt32(0,-1);
+        map.forEachFeatureAtPixel(evt.pixel, function(feature) {
+            selectedFeature.setInt32(0, parseInt(feature.getId().split('.')[1]));
+
+            if (!isShowInfos) return false;
+
+            // move that to live view
+            const positionStr = feature.get('geometry').getCoordinates().join(", ");
+            const filterKeys = ['time','name','callsign','imo','cog'];
+            const properties = feature.getKeys()
+                .filter(k => filterKeys.includes(k))
+                .map(k => `<li><b>${k}:</b> <i>${feature.get(k)}</i></li>`)
+                .join('\n');
+            shipinfos.innerHTML = `<li><b>id:</b> <i>${feature.getId()}</i></li>\n
                 <li><b>mmsi:</b> <i>${feature.getId().split('.')[1]}</i></li>\n
                 <li><b>position:</b> <i>${positionStr}</i></li>\n
                 ${properties}`;
 
-                return true;
-            }, {
-                layerFilter: function(layer){
-                    return layer.ol_uid == webglLayer.ol_uid;
-                },
+            return true;
+        }, {
+            layerFilter: function(layer){
+                return layer.ol_uid == webglLayer.ol_uid;
+            },
 
-            });
-            map.render();
         });
-
-        map.on('moveend', function(evt){
-            if (!isShowInfos()) return;
-
-            const extent = map.getView().calculateExtent(map.getSize());
-            shipcount.innerHTML = webglSource.getFeaturesInExtent(extent).length;
-        });
-
-        // setInterval(function(){
-        //     map.render();
-        // }, 1000/30);
-
-        sync(map);
+        map.render();
     });
+
+    map.on('moveend', function(evt){
+        if (!isShowInfos) return;
+
+        const extent = map.getView().calculateExtent(map.getSize());
+        shipcount.innerHTML = webglSource.getFeaturesInExtent(extent).length;
+    });
+    //-->
+
+    sync(map);
+});
+
+// vim: set foldmethod=marker foldmarker=<--,--> :
