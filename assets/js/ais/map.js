@@ -196,8 +196,8 @@ Promise.all([vertexShaderTemplate, fragmentShaderTemplate,
 
         const webglSource = new VectorSource({
             format: new GeoJSON(),
-            url: 'http://192.168.8.157:8600/geoserver/ais/wms?service=WMS&version=1.1.1&request=GetMap&layers=ais%3Ashipinfos&bbox=-180.0%2C-90.0%2C180.0%2C90.0&width=768&height=384&srs=EPSG%3A4326&format=geojson&time=P1Y2DT12H/PRESENT',
-            // url: 'data/geojson/ais.json',
+            // url: 'http://192.168.8.157:8600/geoserver/ais/wms?service=WMS&version=1.1.1&request=GetMap&layers=ais%3Ashipinfos&bbox=-180.0%2C-90.0%2C180.0%2C90.0&width=768&height=384&srs=EPSG%3A4326&format=geojson&time=PT2H/PRESENT',
+            url: 'data/geojson/ais.json',
             crossOrigin: 'anonymous',
         });
         const webglLayer = new CustomLayer({
