@@ -11,7 +11,6 @@ import OSM from 'ol/source/OSM';
 import {fromLonLat} from 'ol/proj';
 
 import Renderer from 'ol/renderer/webgl/PointsLayer';
-import {createRenderer as createCustomRenderer} from './CustomRenderer';
 
 import GeoJSON from 'ol/format/GeoJSON';
 
@@ -275,15 +274,17 @@ Promise.all([vertexShaderTemplate, fragmentShaderTemplate,
     }).then(function(results){
         class CustomLayer extends VectorLayer{
             createRenderer() {
-                return createCustomRenderer(this, {
+                const options = {
                     attributes: customLayerAttributes,
-                    arrayAttributes: customLayerAttributeArrays,
                     uniforms: uniforms,
                     vertexShader:  results.vertex,
                     fragmentShader: results.fragment,
                     hitVertexShader:  results.hitvertex,
                     hitFragmentShader: results.hitfragment,
-                });
+                };
+                console.log(options.hitVertexShader);
+                console.log(options.hitFragmentShader);
+                return new Renderer(this, options);
             }
         }
 
