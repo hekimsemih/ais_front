@@ -1,3 +1,4 @@
+import "../../css/map.scss"
 import 'ol/ol.css';
 import {Map, View, Feature} from 'ol';
 
