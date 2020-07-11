@@ -2,8 +2,11 @@
 precision highp int;
 precision highp float;
 uniform float u_selectedId;
+
 varying vec2 v_texCoord;
 varying float v_size;
+varying float v_iscircle;
+varying float v_id;
 
 vec2 poly[MAX_NUM_VERTICES];
 float segLen[MAX_NUM_VERTICES];
@@ -13,8 +16,6 @@ const int n = 5;
 float strokefactor = 3.;
 
 vec4 outsidecolor = vec4(0.);
-
-{{init}}
 
 float isLeft(vec2 p, vec2 v0, vec2 v1) {
     return ((v1.x - v0.x) * (p.y - v0.y)
@@ -179,7 +180,6 @@ vec4 getPolygon(vec2 p,
 }
 
 void main(void) {
-    {{main}}
     vec2 texCoord = v_texCoord * 2.0 - vec2(1.0, 1.0);
     vec4 symbolcolor = vec4(vec3(1.), 1.);
     vec4 strokecolor = symbolcolor;
@@ -187,13 +187,13 @@ void main(void) {
     vec2 strokepattern =  vec2(2.,0.)/strokefactor;
     vec4 color = outsidecolor;
 
-    if (b_id == u_selectedId){
+    if (v_id == u_selectedId){
         strokecolor = vec4(1.,0.,0.,1.);
         strokefactor += 2.;
     }
     float strokesize = strokefactor * 2. * (1./v_size);
 
-    if (b_iscircle == 1.){
+    if (v_iscircle == 1.){
         color = getCircle(texCoord,
                 symbolcolor, strokecolor,
             strokesize, strokepattern);

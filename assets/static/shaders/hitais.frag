@@ -3,8 +3,8 @@ precision highp int;
 precision highp float;
 varying vec2 v_texCoord;
 varying float v_size;
-varying float v_iscircle;
 varying vec4 v_hitColor;
+varying float v_iscircle;
 
 vec2 poly[MAX_NUM_VERTICES];
 float segLen[MAX_NUM_VERTICES];
