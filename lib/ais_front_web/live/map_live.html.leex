@@ -1,4 +1,10 @@
-<div id="info">
+<div id="liveview-data" 
+     data-show-infos="<%= @show_infos %>">
+</div>
+<%= if @show_infos do %>
+<div id="infos">
+  <%# <div id="mouse-position"></div> %>
   <div id="shipinfos"></div>
   <div id="shipcount"></div>
 </div>
+<% end %>
