@@ -1,30 +1,21 @@
 import "../../css/map.scss"
 import 'ol/ol.css';
-import {Map, View, Feature} from 'ol';
 
+import {Map, View, Feature} from 'ol';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
-
 import VectorSource from 'ol/source/Vector';
 import OSM from 'ol/source/OSM';
-
-import {fromLonLat} from 'ol/proj';
-
+import GeoJSON from 'ol/format/GeoJSON';
 import Renderer from 'ol/renderer/webgl/PointsLayer';
 
-import GeoJSON from 'ol/format/GeoJSON';
-
 import {defaults as defaultInteractions, DragRotateAndZoom} from 'ol/interaction';
-
 import {RegularShape, Fill, Style, Stroke} from 'ol/style';
-
-// import Point from 'ol/geom/Point';
 
 import MousePosition from 'ol/control/MousePosition';
 import {defaults as defaultControls} from 'ol/control';
 import {createStringXY} from 'ol/coordinate';
-
-import {makeInverse as makeInverseTransform} from 'ol/transform'
+import {fromLonLat} from 'ol/proj';
 
 import sync from 'ol-hashed';
 
@@ -33,12 +24,12 @@ const mousePositionControl = new MousePosition({
   projection: 'EPSG:3857',
   // comment the following two lines to have the mouse position
   // be placed within the map.
-  className: 'custom-mouse-position',
-  target: document.getElementById('mouse-position'),
+  // className: 'custom-mouse-position',
+  // target: document.getElementById('mouse-position'),
   undefinedHTML: '&nbsp;'
 });
 
-const stamenLayer = new TileLayer({
+const osmLayer = new TileLayer({
     source: new OSM()
 });
 const focusSource = new VectorSource();
@@ -62,6 +53,7 @@ const focusArrayBuffer = new ArrayBuffer(Float32Array.BYTES_PER_ELEMENT);
 const selectedFeature = new DataView(focusArrayBuffer);
 selectedFeature.setInt32(0,-1);
 
+// We need size, angle, color, shape to properly draw a ship
 const customLayerAttributes = [{
     name: 'size',
     callback: function (feature) {
@@ -88,19 +80,13 @@ const customLayerAttributes = [{
     },
     toFragment: true,
 },{
-    name: 'cosangle',
+    name: 'angle',
     callback: function (feature) {
-        return Math.cos(feature.get('cog')*Math.PI/180);
+        return feature.get('cog')*Math.PI/180;
     }
-},{
-    name: 'sinangle',
-    callback: function (feature) {
-        return Math.sin(feature.get('cog')*Math.PI/180);
-    }
-},
+}
 ];
-const customLayerAttributeArrays = [
-];
+const customLayerAttributeArrays = [];
 
 function numTwoFloats(num){
     const significantDigits = 6;
@@ -169,86 +155,6 @@ const uniforms = {
         // console.log(transform);
         return transform;
     },
-    u_renderTransform: function(framestate){
-        return webglLayerRenderer.renderTransform_;
-    },
-    u_invertProjTransform: function(framestate){
-        const size = framestate.size;
-        const rotation = framestate.viewState.rotation;
-        const resolution = framestate.viewState.resolution;
-        const center = framestate.viewState.center;
-        const sx = 2 / (resolution * size[0]);
-        const sy = 2 / (resolution * size[1]);
-        const dx2 = -center[0];
-        const dy2 = -center[1];
-
-        const transform = new Array(6);
-        transform[0] = sx;
-        transform[1] = 0;
-        transform[2] = 0;
-        transform[3] = sy;
-        transform[4] = dx2 * sx;
-        transform[5] = dy2 * sy;
-
-        const itransform = new Array(6)
-        makeInverseTransform(itransform, transform);
-        // console.log('transform :', transform);
-        // console.log('itransform :', itransform);
-        // console.log('transform . itransform :', multiplyTransform(transform, itransform));
-        return itransform;
-    },
-    u_projAMatrix: function(framestate){
-        // return webglLayerRenderer.currentTransform_;
-        const mtf = matrixTwoFloats(webglLayerRenderer.currentTransform_);
-        // console.log(mtf[0]);
-        return mtf[0];
-
-        // const size = framestate.size;
-        // const rotation = framestate.viewState.rotation;
-        // const resolution = framestate.viewState.resolution;
-        // const center = framestate.viewState.center;
-        // const sx = 2 / (resolution * size[0]);
-        // const sy = 2 / (resolution * size[1]);
-        // const dx2 = -center[0];
-        // const dy2 = -center[1];
-
-        // const transform = new Array(6);
-        // transform[0] = numTwoFloats(sx)[0];
-        // transform[1] = 0;
-        // transform[2] = 0;
-        // transform[3] = numTwoFloats(sy)[0];
-        // transform[4] = numTwoFloats(dx2 * sx)[0];
-        // transform[5] = numTwoFloats(dy2 * sy)[0];
-
-        // console.log(transform);
-        // return transform;
-    },
-    u_projBMatrix: function(framestate){
-        // return matrixTwoFloats(webglLayerRenderer.currentTransform_)[1];
-        const mtf = matrixTwoFloats(webglLayerRenderer.currentTransform_);
-        // console.log(mtf[1]);
-        return mtf[1];
-
-        // const size = framestate.size;
-        // const rotation = framestate.viewState.rotation;
-        // const resolution = framestate.viewState.resolution;
-        // const center = framestate.viewState.center;
-        // const sx = 2 / (resolution * size[0]);
-        // const sy = 2 / (resolution * size[1]);
-        // const dx2 = -center[0];
-        // const dy2 = -center[1];
-
-        // const transform = new Array(6);
-        // transform[0] = numTwoFloats(sx)[1];
-        // transform[1] = 0;
-        // transform[2] = 0;
-        // transform[3] = numTwoFloats(sy)[1];
-        // transform[4] = numTwoFloats(dx2 * sx)[1];
-        // transform[5] = numTwoFloats(dy2 * sy)[1];
-
-        // console.log(transform);
-        // return transform;
-    },
 };
 
 function fetchTemplate(url) {
@@ -311,7 +217,7 @@ Promise.all([vertexShaderTemplate, fragmentShaderTemplate,
                 new DragRotateAndZoom()
             ]),
             layers: [
-                stamenLayer,
+                osmLayer,
                 webglLayer,
                 focusLayer,
             ],
@@ -328,11 +234,6 @@ Promise.all([vertexShaderTemplate, fragmentShaderTemplate,
         map.on('pointermove', function(evt) {
             selectedFeature.setInt32(0,-1);
             map.forEachFeatureAtPixel(evt.pixel, function(feature) {
-                // const coord = feature.getGeometry().getCoordinates();
-                // const size = 30;
-                // const newFocus = new Feature(new Point(coord));
-                // newFocus.setStyle(focusStyle);
-                // focusSource.addFeature(newFocus);
                 selectedFeature.setInt32(0, parseInt(feature.getId().split('.')[1]));
 
                 const positionStr = feature.get('geometry').getCoordinates().join(", ");
