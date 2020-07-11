@@ -227,15 +227,18 @@ Promise.all([vertexShaderTemplate, fragmentShaderTemplate,
             })
         });
 
-        const info = document.getElementById('info');
-        const shipcount = document.getElementById('shipcount');
-        const shipinfos = document.getElementById('shipinfos');
+        const lvData = document.getElementById("liveview-data");
+        const isShowInfos = () =>
+            lvData.dataset.showInfos.toLowerCase() === "true";
 
         map.on('pointermove', function(evt) {
             selectedFeature.setInt32(0,-1);
             map.forEachFeatureAtPixel(evt.pixel, function(feature) {
                 selectedFeature.setInt32(0, parseInt(feature.getId().split('.')[1]));
 
+                if (!isShowInfos()) return false;
+
+                // move that to live view
                 const positionStr = feature.get('geometry').getCoordinates().join(", ");
                 const filterKeys = ['time','name','callsign','imo','cog'];
                 const properties = feature.getKeys()
@@ -258,6 +261,8 @@ Promise.all([vertexShaderTemplate, fragmentShaderTemplate,
         });
 
         map.on('moveend', function(evt){
+            if (!isShowInfos()) return;
+
             const extent = map.getView().calculateExtent(map.getSize());
             shipcount.innerHTML = webglSource.getFeaturesInExtent(extent).length;
         });
