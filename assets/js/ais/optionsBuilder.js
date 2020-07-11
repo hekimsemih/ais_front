@@ -1,5 +1,3 @@
-import Renderer from 'ol/renderer/webgl/PointsLayer';
-
 /*
  * Transform an array attribute to a serie of attributes usable by the
  * shaders
@@ -50,7 +48,7 @@ function attributeArraysBuilder(attributeArrays){
     return out;
 }
 /*
- * Take one attribute to add to the shaders and output warious template
+ * Take one attribute to add to the shaders and output various template
  * location values for that attribute (main, init in vertex or fragment).
  * The attribute will be put in the fragment shader only if
  * attribute.toFragment is set to true.
@@ -58,7 +56,7 @@ function attributeArraysBuilder(attributeArrays){
  * array
  * @param fragmentBufferIndex: The index of the buffer used to store the
  * attribute
- * @param isArray: Wether or not the attribute we are working with is an
+ * @param isArray: Whether or not the attribute we are working with is an
  * array
  */
 function attributeShadersBuilder_(attribute, fragmentBufferIndex, isArray=false){
@@ -75,6 +73,12 @@ function attributeShadersBuilder_(attribute, fragmentBufferIndex, isArray=false)
         mainVertex: '',
         initFragment: '',
         mainFragment: '',
+
+        initHitVertex: '',
+        mainHitVertex: '',
+        initHitFragment: '',
+        mainHitFragment: '',
+
         fragmentBufferIndex: 0,
     };
 
@@ -87,10 +91,15 @@ function attributeShadersBuilder_(attribute, fragmentBufferIndex, isArray=false)
     // attribute var a_name;
     if (!isArray){
         out.initVertex += `attribute float a_${attribute.name};\n`;
+        out.initHitVertex += `attribute float a_${attribute.name};\n`;
 
         if (attribute.toFragment){
             out.mainVertex += `v_fragmentBuffer[${ijk.i}][${ijk.j}][${ijk.k}] = a_${attribute.name};\n`;
             out.mainFragment += `float b_${attribute.name} = v_fragmentBuffer[${ijk.i}][${ijk.j}][${ijk.k}];\n`;
+
+            out.mainHitVertex += `v_fragmentBuffer[${ijk.i}][${ijk.j}][${ijk.k}] = a_${attribute.name};\n`;
+            out.mainHitFragment += `float b_${attribute.name} = v_fragmentBuffer[${ijk.i}][${ijk.j}][${ijk.k}];\n`;
+
             ijk = buffer_ijk(++out.fragmentBufferIndex);
         }
 
@@ -126,18 +135,6 @@ function attributeShadersBuilder_(attribute, fragmentBufferIndex, isArray=false)
         }
     }
 
-
-    // v_name[i] = var((elt,)*dimension);
-    // for (let i=0; i<attribute.size; i++){
-    //     out.mainVertex += `v_${attribute.name}`;
-    //     out.mainVertex += attribute.size > 1 ? `[${i}] = ` : ` = `;
-    //     let attrList = []
-    //     for (let j = 0; j < attribute.dimension; j++){
-    //         attrList.push(`a_${attribute.name}_${i}_${j}`);
-    //     }
-    //     out.mainVertex += `${varName}(${attrList.join(', ')});\n`
-    // }
-
     return out;
 }
 /*
@@ -145,16 +142,23 @@ function attributeShadersBuilder_(attribute, fragmentBufferIndex, isArray=false)
  * attributeArrays and build the shaders
  * @return The actual shaders to give to Webgl
  */
-function shadersBuilder(vertexTemplate, fragmentTemplate, attributes, attributeArrays){
+function shadersBuilder(templates, attributes, attributeArrays){
     const shaders = {
         vertex:'',
         fragment:'',
+        hitvertex:'',
+        hitfragment:'',
     }
     const attributesVal ={
         initVertex: "",
         mainVertex: "",
         initFragment: "",
-        mainFragment: ""
+        mainFragment: "",
+
+        initHitVertex: "",
+        mainHitVertex: "",
+        initHitFragment: "",
+        mainHitFragment: ""
     }
     let fragmentBufferIndex = 0;
     for (let i = 0; i < attributes.length; i++){
@@ -163,48 +167,49 @@ function shadersBuilder(vertexTemplate, fragmentTemplate, attributes, attributeA
         attributesVal.mainVertex += val.mainVertex;
         attributesVal.initFragment += val.initFragment;
         attributesVal.mainFragment += val.mainFragment;
+
+        attributesVal.initHitVertex += val.initHitVertex;
+        attributesVal.mainHitVertex += val.mainHitVertex;
+        attributesVal.initHitFragment += val.initHitFragment;
+        attributesVal.mainHitFragment += val.mainHitFragment;
+
         fragmentBufferIndex = val.fragmentBufferIndex;
     }
-    // for (let i = 0; i < attributeArrays.length; i++){
-    //     let val = this.attributeShadersBuilder_(attributeArrays[i], fragmentBufferIndex, true);
-    //     attributesVal.initVertex += val.initVertex;
-    //     attributesVal.mainVertex += val.mainVertex;
-    //     attributesVal.initFragment += val.initFragment;
-    //     attributesVal.mainFragment += val.mainFragment;
-    //     fragmentBufferIndex = val.fragmentBufferIndex;
-    // }
     if (fragmentBufferIndex > 0){
         const bufferLen = (fragmentBufferIndex / 16 >> 0) + 1;
         const bufferStr = `varying mat4 v_fragmentBuffer[${bufferLen}];\n`;
         attributesVal.initVertex += bufferStr;
         attributesVal.initFragment += bufferStr;
+        attributesVal.initHitVertex += bufferStr;
+        attributesVal.initHitFragment += bufferStr;
     }
-    shaders.vertex = vertexTemplate.replace(
+    shaders.vertex = templates.vertex.replace(
         /{{(.*)}}/g, (m,p) => attributesVal[`${p}Vertex`]);
-    shaders.fragment = fragmentTemplate.replace(
+    shaders.fragment = templates.fragment.replace(
         /{{(.*)}}/g, (m,p) => attributesVal[`${p}Fragment`]);
+    shaders.hitvertex = templates.hitvertex.replace(
+        /{{(.*)}}/g, (m,p) => attributesVal[`${p}HitVertex`]);
+    shaders.hitfragment = templates.hitfragment.replace(
+        /{{(.*)}}/g, (m,p) => attributesVal[`${p}HitFragment`]);
     return shaders;
 }
 
-function createRenderer(layer, options){
+export function rendererOptions(options){
     if (options.arrayAttributes && options.arrayAttributes.length)
         options.attributes.push(
             attributeArraysBuilder(options.arrayAttributes)
         );
 
     const shaders = shadersBuilder(
-        options.vertexShader,
-        options.fragmentShader,
+        options.templates,
         options.attributes,
         options.arrayAttributes
     );
     options.vertexShader = shaders.vertex;
     options.fragmentShader = shaders.fragment;
-    console.log(options.vertexShader);
-    console.log(options.fragmentShader);
+    options.hitVertexShader = shaders.hitvertex;
+    options.hitFragmentShader = shaders.hitfragment;
 
-    return new Renderer(layer, options);
+    return options;
 
 }
-
-export {createRenderer};
