@@ -1,10 +1,47 @@
-<div id="liveview-data" 
-     data-show-infos="<%= @show_infos %>">
-</div>
-<%= if @show_infos do %>
-<div id="infos">
-  <%# <div id="mouse-position"></div> %>
-  <div id="shipinfos"></div>
-  <div id="shipcount"></div>
-</div>
-<% end %>
+<main role="main" class="map-container">
+  <p class="alert alert-info" role="alert"
+      phx-click="lv:clear-flash"
+      phx-value-key="info"><%= live_flash(@flash, :info) %></p>
+
+  <p class="alert alert-danger" role="alert"
+      phx-click="lv:clear-flash"
+      phx-value-key="error"><%= live_flash(@flash, :error) %></p>
+
+  <header id="map-header" class="bar">test</header>
+
+  <section id="map-main">
+    <section id="map" phx-hook="LoadMap"></section>
+    <nav id="panel-menu">
+      <ul>
+        <li phx-click="showpanel" phx-value-panel="search">
+          <svg class="menu-item"><image href="images/search.svg"/></svg>
+        </li>
+        <li phx-click="showpanel" phx-value-panel="shipinfos">
+          <svg class="menu-item"><image href="images/boat.svg"/></svg>
+        </li>
+      </ul>
+    </nav>
+    <section id="panels"
+             phx-hook="PanelVisibility"
+      >
+      <%= for %{id: id, title: title, module: module, hook: hook} <- @panels do %>
+      <article id="<%= id %>"
+               class="panel<%= if @panel == id, do: " in", else: " out" %>"
+               <%= if hook, do: "phx-hook=\"#{hook}\"" %>
+      >
+        <header class="panel-title">
+          <svg class="icon"><circle cx="50%" cy="50%" r="50%"/></svg>
+          <h2><%= title %></h2>
+          <button class="hide-panel" phx-click="hidepanel" phx-value-panel="<%= id %>">&gt;&gt;</button>
+        </header>
+        <%= live_component @socket, module, id: id %>
+      </article>
+      <% end %>
+    </section>
+  </section>
+
+  <footer id="map-footer" class="bar">
+    <div id="mouse-position" class="map-footer-item"></div>
+    <div id="shipcount" class="map-footer-item"></div>
+  </footer>
+</main>

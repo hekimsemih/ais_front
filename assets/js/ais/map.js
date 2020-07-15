@@ -59,7 +59,52 @@ const focusArrayBuffer = new ArrayBuffer(Float32Array.BYTES_PER_ELEMENT);
 const hoveredFeature = new DataView(focusArrayBuffer);
 hoveredFeature.setInt32(0,-1);
 //-->
+//<--Liveview hooks
+const lvs = window.liveSocket;
+lvs.enableDebug()
 
+lvs.hooks.LoadMap = {
+    mounted(){
+        loadMap();
+        mousePositionControl.setMap(map);
+        shipsInView()
+    },
+    updated(){
+        map.setTarget(document.getElementById("map"));
+        map.setTarget("map");
+        mousePositionControl.setMap(map);
+        shipsInView()
+    }
+};
+
+const showpanelEvent = (detail) => { return new CustomEvent("showpanel", {detail: detail}) };
+const hidepanelEvent = (detail) => { return new CustomEvent("hidepanel", {detail: detail}) };
+let panels = null;
+lvs.hooks.PanelVisibility = {
+    mounted(){
+        panels = this.el;
+        this.el.addEventListener("showpanel", (e) => {
+            this.pushEvent("showpanel", e.detail, (reply, ref) =>
+                console.log("not sure what to do here"));
+        });
+        this.el.addEventListener("hidepanel", (e) => {
+            this.pushEvent("hidepanel", e.detail, (reply, ref) =>
+                console.log("not sure what to do here"));
+        });
+    }
+};
+const changeinfosEvent = (detail) => { return new CustomEvent("changeinfos", {detail: detail}) };
+let shipinfos = null;
+lvs.hooks.ChangeInfos = {
+    mounted(){
+        shipinfos = this.el;
+        this.el.addEventListener("changeinfos", (e) => {
+            this.pushEvent("changeinfos", e.detail, (reply, ref) =>
+                console.log("not sure what to do here"));
+        });
+    }
+};
+//-->
 //<-- Webgl attributes
 // We need size, angle, color, shape to properly draw a ship
 const customLayerAttributes = [{
