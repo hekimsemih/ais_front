@@ -7,6 +7,7 @@ import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import OSM from 'ol/source/OSM';
+import Stamen from 'ol/source/Stamen';
 import GeoJSON from 'ol/format/GeoJSON';
 import Renderer from 'ol/renderer/webgl/PointsLayer';
 
@@ -20,10 +21,44 @@ import {fromLonLat} from 'ol/proj';
 
 import sync from 'ol-hashed';
 //-->
+//<--Global variables
+const mousePositionControl = new MousePosition({
+    coordinateFormat: createStringXY(4),
+    projection: 'EPSG:3857',
+    // comment the following two lines to have the mouse position
+    // be placed within the map.
+    className: 'custom-mouse-position',
+    target: document.getElementById('mouse-position'),
+    undefinedHTML: '&nbsp;'
+});
+
+const map = new Map({
+    controls: defaultControls().extend([mousePositionControl]),
+    // target: 'map',
+    interactions: defaultInteractions().extend([
+        new DragRotateAndZoom()
+    ]),
+    // layers: [
+    //     osmLayer,
+    //     webglLayer,
+    // ],
+    view: new View({
+        center: fromLonLat([0, 0]),
+        zoom: 2
+    })
+});
+
+const webglSource = new VectorSource({
+    format: new GeoJSON(),
+    url: 'http://192.168.8.157:8600/geoserver/ais/wms?service=WMS&version=1.1.1&request=GetMap&layers=ais%3Ashipinfos&bbox=-180.0%2C-90.0%2C180.0%2C90.0&width=768&height=384&srs=EPSG%3A4326&format=geojson&time=PT5M/PRESENT',
+    url: 'data/geojson/ais.json',
+    crossOrigin: 'anonymous',
+});
 
 const focusArrayBuffer = new ArrayBuffer(Float32Array.BYTES_PER_ELEMENT);
-const selectedFeature = new DataView(focusArrayBuffer);
-selectedFeature.setInt32(0,-1);
+const hoveredFeature = new DataView(focusArrayBuffer);
+hoveredFeature.setInt32(0,-1);
+//-->
 
 //<-- Webgl attributes
 // We need size, angle, color, shape to properly draw a ship
@@ -81,7 +116,7 @@ function numTwoFloats(num){
 }
 const uniforms = {
     u_selectedId: function(framestate){
-        return selectedFeature.getFloat32(0);
+        return hoveredFeature.getFloat32(0);
     },
     u_eyepos: function(framestate){
         const center = framestate.viewState.center;
@@ -129,124 +164,114 @@ const fragmentShader = fetchShader('/shaders/ais.frag');
 const hitVertexShader = fetchShader('/shaders/hitais.vert');
 const hitFragmentShader = fetchShader('/shaders/hitais.frag');
 //-->
+//<--Map
 
-Promise.all([
-    vertexShader,
-    fragmentShaderTemplate,
-    hitVertexShader,
-    hitFragmentShaderTemplate
-]).then(function(results){
-    return {
-        vertex: results[0],
-        fragment: results[1],
-        hitvertex: results[2],
-        hitfragment: results[3],
-    }
-}).then(function(results){
+function shipsInView(){
+    const extent = map.getView().calculateExtent(map.getSize());
+    const shipcount = document.getElementById("shipcount");
+    shipcount.innerHTML = `${webglSource.getFeaturesInExtent(extent).length} ships in view`;
+}
 
-    //<-- Layers and sources
-    class CustomLayer extends VectorLayer{
-        createRenderer() {
-            const options = {
-                attributes: customLayerAttributes,
-                uniforms: uniforms,
-                vertexShader:  results.vertex,
-                fragmentShader: results.fragment,
-                hitVertexShader:  results.hitvertex,
-                hitFragmentShader: results.hitfragment,
-            };
-            console.log(options.hitVertexShader);
-            console.log(options.hitFragmentShader);
-            return new Renderer(this, options);
+function loadMap(){
+    Promise.all([
+        vertexShader,
+        fragmentShader,
+        hitVertexShader,
+        hitFragmentShader
+    ]).then(function(results){
+        return {
+            vertex: results[0],
+            fragment: results[1],
+            hitvertex: results[2],
+            hitfragment: results[3],
         }
-    }
+    }).then(function(results){
 
-    const webglSource = new VectorSource({
-        format: new GeoJSON(),
-        // url: 'http://192.168.8.157:8600/geoserver/ais/wms?service=WMS&version=1.1.1&request=GetMap&layers=ais%3Ashipinfos&bbox=-180.0%2C-90.0%2C180.0%2C90.0&width=768&height=384&srs=EPSG%3A4326&format=geojson&time=PT2H/PRESENT',
-        url: 'data/geojson/ais.json',
-        crossOrigin: 'anonymous',
-    });
-    const webglLayer = new CustomLayer({
-        source: webglSource,
-    });
-    const webglError = webglLayer.getRenderer().getShaderCompileErrors();
-    if (webglError) {
-        console.log(webglError)
-    }
-
-    const osmLayer = new TileLayer({
-        source: new OSM()
-    });
-    //-->
-
-    const mousePositionControl = new MousePosition({
-        coordinateFormat: createStringXY(4),
-        projection: 'EPSG:3857',
-        // comment the following two lines to have the mouse position
-        // be placed within the map.
-        // className: 'custom-mouse-position',
-        // target: document.getElementById('mouse-position'),
-        undefinedHTML: '&nbsp;'
-    });
-
-    const map = new Map({
-        controls: defaultControls().extend([mousePositionControl]),
-        target: 'map',
-        interactions: defaultInteractions().extend([
-            new DragRotateAndZoom()
-        ]),
-        layers: [
-            osmLayer,
-            webglLayer,
-        ],
-        view: new View({
-            center: fromLonLat([0, 0]),
-            zoom: 2
-        })
-    });
-
-    //<-- map events
-    let isShowInfos = false;
-
-    map.on('pointermove', function(evt) {
-        selectedFeature.setInt32(0,-1);
-        map.forEachFeatureAtPixel(evt.pixel, function(feature) {
-            selectedFeature.setInt32(0, parseInt(feature.getId().split('.')[1]));
-
-            if (!isShowInfos) return false;
-
-            // move that to live view
-            const positionStr = feature.get('geometry').getCoordinates().join(", ");
-            const filterKeys = ['time','name','callsign','imo','cog'];
-            const properties = feature.getKeys()
-                .filter(k => filterKeys.includes(k))
-                .map(k => `<li><b>${k}:</b> <i>${feature.get(k)}</i></li>`)
-                .join('\n');
-            shipinfos.innerHTML = `<li><b>id:</b> <i>${feature.getId()}</i></li>\n
-                <li><b>mmsi:</b> <i>${feature.getId().split('.')[1]}</i></li>\n
-                <li><b>position:</b> <i>${positionStr}</i></li>\n
-                ${properties}`;
-
-            return true;
-        }, {
-            layerFilter: function(layer){
-                return layer.ol_uid == webglLayer.ol_uid;
-            },
-
+        //<-- Layers
+        class CustomLayer extends VectorLayer{
+            createRenderer() {
+                const options = {
+                    attributes: customLayerAttributes,
+                    uniforms: uniforms,
+                    vertexShader:  results.vertex,
+                    fragmentShader: results.fragment,
+                    hitVertexShader:  results.hitvertex,
+                    hitFragmentShader: results.hitfragment,
+                };
+                console.log(options.hitVertexShader);
+                console.log(options.hitFragmentShader);
+                return new Renderer(this, options);
+            }
+        }
+        const webglLayer = new CustomLayer({
+            source: webglSource,
         });
-        map.render();
+        const webglError = webglLayer.getRenderer().getShaderCompileErrors();
+        if (webglError) {
+            console.log(webglError)
+        }
+
+        const osmLayer = new TileLayer({
+            source: new OSM()
+        });
+        const stamenLayer = new TileLayer({
+            source: new Stamen({layer: "toner"})
+        });
+        //-->
+
+        // map.addLayer(osmLayer);
+        map.addLayer(stamenLayer);
+        // map.addLayer(webglLayer);
+        map.setTarget("map");
+
+        //<-- map events
+        map.on('click', function(evt) {
+            map.forEachFeatureAtPixel(evt.pixel, function(feature) {
+                const featureId = feature.getId().split('.')[1];
+                shipinfos.dispatchEvent(changeinfosEvent({id: featureId}));
+                panels.dispatchEvent(showpanelEvent({panel: "shipinfos"}));
+                return true;
+            }, {
+                layerFilter: function(layer){
+                    return layer.ol_uid == webglLayer.ol_uid;
+                },
+            });
+        });
+        map.on('pointermove', function(evt) {
+            hoveredFeature.setInt32(0,-1);
+            map.forEachFeatureAtPixel(evt.pixel, function(feature) {
+                hoveredFeature.setInt32(0, parseInt(feature.getId().split('.')[1]));
+
+                // if (!isShowInfos) return false;
+
+                // move that to live view
+                // const positionStr = feature.get('geometry').getCoordinates().join(", ");
+                // const filterKeys = ['time','name','callsign','imo','cog'];
+                // const properties = feature.getKeys()
+                //     .filter(k => filterKeys.includes(k))
+                //     .map(k => `<li><b>${k}:</b> <i>${feature.get(k)}</i></li>`)
+                //     .join('\n');
+                // shipinfos.innerHTML = `<li><b>id:</b> <i>${feature.getId()}</i></li>\n
+                // <li><b>mmsi:</b> <i>${feature.getId().split('.')[1]}</i></li>\n
+                // <li><b>position:</b> <i>${positionStr}</i></li>\n
+                // ${properties}`;
+
+                return true;
+            }, {
+                layerFilter: function(layer){
+                    return layer.ol_uid == webglLayer.ol_uid;
+                },
+            });
+            map.render();
+        });
+
+        map.on('moveend', function(evt){
+            shipsInView();
+        });
+        //-->
+
+        sync(map);
     });
-
-    map.on('moveend', function(evt){
-        if (!isShowInfos) return;
-
-        const extent = map.getView().calculateExtent(map.getSize());
-        shipcount.innerHTML = webglSource.getFeaturesInExtent(extent).length;
-    });
-    //-->
-
-    sync(map);
-});
-
+}
+//-->
 // vim: set foldmethod=marker foldmarker=<--,--> :
