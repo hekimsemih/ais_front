@@ -13,8 +13,9 @@ defmodule AisFrontWeb.MapLive do
         dummy: "",
         panel: nil,
         panels: [
-          %{id: "shipinfos", title: "Ship Infos", module: ShipInfos, hook: "ChangeInfos"},
-          %{id: "search", title: "Search", module: Search, hook: nil}
+          %{id: "search", title: "Search", icon: "search.svg", module: Search, hook: nil},
+          %{id: "shipinfos", title: "Ship Infos", icon: "boat.svg", module: ShipInfos, hook: "ChangeInfos"},
+          %{id: "attributions", title: "Attributions", icon: "nil.svg", module: Search, hook: nil}
         ],
         shipinfos: [id: 1234, bar: "something"]
       )

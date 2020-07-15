@@ -13,12 +13,17 @@
     <section id="map" phx-hook="LoadMap"></section>
     <nav id="panel-menu">
       <ul>
-        <li phx-click="showpanel" phx-value-panel="search">
-          <svg class="menu-item"><image href="images/search.svg"/></svg>
-        </li>
-        <li phx-click="showpanel" phx-value-panel="shipinfos">
-          <svg class="menu-item"><image href="images/boat.svg"/></svg>
-        </li>
+        <%= for %{id: id, title: title, icon: icon, module: module, hook: hook} <- @panels do %>
+          <%= if @panel == id do %>
+            <li phx-click="hidepanel" phx-value-panel="<%= id %>" class="active">
+          <% else %>
+            <li phx-click="showpanel" phx-value-panel="<%= id %>">
+          <% end %>
+              <svg class="menu-item">
+                <image href="images/<%= icon %>"/>
+              </svg>
+            </li>
+        <% end %>
       </ul>
     </nav>
     <section id="panels"

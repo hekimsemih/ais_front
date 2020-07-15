@@ -51,18 +51,23 @@ body
         flex-direction: column
       li
         list-style: none
-        padding: 0.5em
+        padding: 0.2em
         background-color: #eee
         border: 1px inset black
         border-right: 0
         margin-bottom: -1px
+        transition: padding-right 0.2s, border-radius 0.2s
         &:hover
-          border: 1px outset black
-          border-right: 0
-          border-radius: 0 0 0 0.8em
-          padding-right: 2em
-          transition: padding-right 0.2s, border-radius 0.2s
-          cursor: pointer
+          background-color: #ddd
+          padding-right: 1em
+      li.active,li:hover
+        border: 1px outset black
+        border-right: 0
+        border-radius: 0 0 0 0.8em
+        transition: padding-right 0.2s, border-radius 0.2s
+        cursor: pointer
+      li.active
+        padding-right: 2em
       .menu-item
         width: 2em
         height: 2em
