@@ -1,0 +1,149 @@
+html
+  font-family: Roboto, sans-serif
+  font-size: 62.5%
+
+body
+  margin: 0
+  background-color: black
+
+.alert:empty
+  display: none;
+
+.map-container
+  margin: 0
+  padding: 0
+  max-width: 100%
+  height: 100vh
+  display: flex
+  flex-direction: column
+  align-items: stretch
+
+  .bar
+    margin: 0
+    padding: 0
+    height: 1.2em
+    width: 100%
+    line-height: 1.2em
+    font-size: 1.2rem
+    background-color: black
+
+  #map-header
+
+  #map-main
+    flex-grow: 1
+    position: relative
+    overflow: hidden
+
+    #map
+      height: 100%
+
+    #panel-menu
+      position: absolute
+      right: 0
+      top: 0
+
+      ul,li
+        margin: 0
+      ul
+        // background-color: #eee
+        display: flex
+        align-items: flex-end
+        flex-direction: column
+      li
+        list-style: none
+        padding: 0.5em
+        background-color: #eee
+        border: 1px inset black
+        border-right: 0
+        margin-bottom: -1px
+        &:hover
+          border: 1px outset black
+          border-right: 0
+          border-radius: 0 0 0 0.8em
+          padding-right: 2em
+          transition: padding-right 0.2s, border-radius 0.2s
+          cursor: pointer
+      .menu-item
+        width: 2em
+        height: 2em
+        image
+          width: 100%
+          height: 100%
+
+    $panel_margin: 0.5em
+    $panel_width: 26em
+    .panel
+      $bg-color: #eee
+      width: $panel_width
+      height: calc(100% - 2*#{$panel_margin})
+      margin: $panel_margin
+      position: absolute
+      top: 0em
+      background-color: $bg-color
+      box-shadow: 0.2em 0.2em 0.8em scale-color($bg-color, $lightness: -80%)
+
+      .panel-title
+        $color: #fff
+        $bg-color: #66f
+        $border-color: #99b
+        color: $color
+        background-color: $bg-color
+        display: flex
+        align-items: center
+        border-bottom: 1px solid
+        border-color: $border-color
+
+        .icon
+          width: 2em
+          height: 2em
+          margin-left: 1em
+          fill: #eee
+          stroke: #333
+        h2,button
+          margin: 0
+        h2
+          flex-grow: 1
+          margin-left: 0.5em
+
+        button
+          background-color: $bg-color
+          color: inherit
+          padding: 0
+          line-height: 0
+          letter-spacing: -.1em
+          width: 2.5em
+          height: 2.5em
+          border: 1px solid $border-color
+          border-bottom: 0
+          border-radius: 0
+          &:hover
+            background-color: scale-color($bg-color, $lightness: 20%)
+            cursor: pointer
+
+      .panel-content
+        padding: 1em
+
+        table
+          border-collapse: collapse
+          tr,th,td
+            border: 0
+
+          tr
+            border-bottom: 1px solid
+            &:last-child
+              border-bottom: 0
+            th
+              border-right: 1px solid
+
+    .panel.in
+      left: 0em
+      transition: left 0.2s
+    .panel.out
+      left: calc(-#{$panel_width} - 2*#{$panel_margin})
+      transition: left 0.2s
+
+  #map-footer
+    display: flex
+
+    .map-footer-item
+      color: white

@@ -1,5 +1,5 @@
 //<-- Imports
-import "../../css/map.scss"
+import "../../css/map.sass"
 import 'ol/ol.css';
 
 import {Map, View, Feature} from 'ol';
