@@ -9,6 +9,7 @@ defmodule AisFront.Application do
     children = [
       # Start the Ecto repository
       AisFront.Repo,
+      AisFront.RepoBack,
       # Start the Telemetry supervisor
       AisFrontWeb.Telemetry,
       # Start the PubSub system

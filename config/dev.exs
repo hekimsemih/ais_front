@@ -9,6 +9,15 @@ config :ais_front, AisFront.Repo,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
+config :ais_front, AisFront.RepoBack,
+  username: "postgres",
+  password: "postgres",
+  database: "ais",
+  hostname: "localhost",
+  show_sensitive_data_on_connection_error: true,
+  pool_size: 10,
+  types: AisFront.PostgresTypes
+
 # For development, we disable any cache and enable
 # debugging and code reloading.
 #
