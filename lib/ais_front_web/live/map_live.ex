@@ -3,6 +3,7 @@ defmodule AisFrontWeb.MapLive do
 
   alias AisFrontWeb.Live.Component.ShipInfos
   alias AisFrontWeb.Live.Component.Search
+  alias AisFrontWeb.Live.Component.Svg
 
   def mount(_params, _session, socket) do
     {

@@ -13,14 +13,14 @@
     <section id="map" phx-hook="LoadMap"></section>
     <nav id="panel-menu">
       <ul>
-        <%= for %{id: id, title: title, icon: icon, module: module, hook: hook} <- @panels do %>
+        <%= for %{id: id, icon: icon} <- @panels do %>
           <%= if @panel == id do %>
-            <li phx-click="hidepanel" phx-value-panel="<%= id %>" class="active">
+            <li id="<%= "menu-item-#{id}" %>" phx-click="hidepanel" phx-value-panel="<%= id %>" class="active">
           <% else %>
-            <li phx-click="showpanel" phx-value-panel="<%= id %>">
+            <li id="<%= "menu-item-#{id}" %>" phx-click="showpanel" phx-value-panel="<%= id %>">
           <% end %>
               <svg class="menu-item">
-                <image href="images/<%= icon %>"/>
+                <%= live_component @socket, Svg, image: icon %>
               </svg>
             </li>
         <% end %>
@@ -37,7 +37,9 @@
         <header class="panel-title">
           <svg class="icon"><circle cx="50%" cy="50%" r="50%"/></svg>
           <h2><%= title %></h2>
-          <button class="hide-panel" phx-click="hidepanel" phx-value-panel="<%= id %>">&gt;&gt;</button>
+          <svg class="close-button hide-panel" phx-click="hidepanel" phx-value-panel="<%= id %>">
+            <%= live_component @socket, Svg, image: "cross.svg" %>
+          </svg>
         </header>
         <%= live_component @socket, module, id: id %>
       </article>

@@ -1,3 +1,11 @@
+$white: #eee
+$grey-lightest: #ddd
+$grey-light: #aaa
+$grey: #888
+$grey-dark: #444
+$grey-darkest: #111
+$blue: #66f
+
 html
   font-family: Roboto, sans-serif
   font-size: 62.5%
@@ -25,7 +33,6 @@ body
     width: 100%
     line-height: 1.2em
     font-size: 1.2rem
-    background-color: black
 
   #map-header
 
@@ -52,33 +59,32 @@ body
       li
         list-style: none
         padding: 0.2em
-        background-color: #eee
-        border: 1px inset black
+        background-color: $white
+        border: 1px solid #555
         border-right: 0
-        margin-bottom: -1px
+        margin-bottom: 0.2em
         transition: padding-right 0.2s, border-radius 0.2s
         &:hover
-          background-color: #ddd
+          background-color: $grey-lightest
           padding-right: 1em
+          cursor: pointer
       li.active,li:hover
-        border: 1px outset black
         border-right: 0
         border-radius: 0 0 0 0.8em
         transition: padding-right 0.2s, border-radius 0.2s
-        cursor: pointer
       li.active
         padding-right: 2em
       .menu-item
         width: 2em
         height: 2em
-        image
-          width: 100%
-          height: 100%
+        path
+          fill: black
+          stroke: black
 
     $panel_margin: 0.5em
     $panel_width: 26em
     .panel
-      $bg-color: #eee
+      $bg-color: $white
       width: $panel_width
       height: calc(100% - 2*#{$panel_margin})
       margin: $panel_margin
@@ -89,19 +95,17 @@ body
 
       .panel-title
         $color: #fff
-        $bg-color: #66f
-        $border-color: #99b
+        $bg-color: $blue
         color: $color
         background-color: $bg-color
         display: flex
         align-items: center
-        border-bottom: 1px solid
-        border-color: $border-color
+        height: 2.5em
 
         .icon
           width: 2em
           height: 2em
-          margin-left: 1em
+          margin-left: 0.5em
           fill: #eee
           stroke: #333
         h2,button
@@ -110,7 +114,7 @@ body
           flex-grow: 1
           margin-left: 0.5em
 
-        button
+        .close-button
           background-color: $bg-color
           color: inherit
           padding: 0
@@ -118,12 +122,14 @@ body
           letter-spacing: -.1em
           width: 2.5em
           height: 2.5em
-          border: 1px solid $border-color
-          border-bottom: 0
-          border-radius: 0
           &:hover
-            background-color: scale-color($bg-color, $lightness: 20%)
             cursor: pointer
+            path
+              fill: $grey-dark
+              stroke: $grey-dark
+          path
+            fill: $white
+            stroke: $white
 
       .panel-content
         padding: 1em
