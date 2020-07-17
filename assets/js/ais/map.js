@@ -274,7 +274,7 @@ function loadMap(){
             map.forEachFeatureAtPixel(evt.pixel, function(feature) {
                 const featureId = feature.getId().split('.')[1];
                 shipinfos.dispatchEvent(changeinfosEvent({id: featureId}));
-                panels.dispatchEvent(showpanelEvent({panel: "shipinfos"}));
+                panels.dispatchEvent(showpanelEvent({panel_id: "shipinfos"}));
                 return true;
             }, {
                 layerFilter: function(layer){

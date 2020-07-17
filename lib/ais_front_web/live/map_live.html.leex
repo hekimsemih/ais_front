@@ -14,10 +14,10 @@
     <nav id="panel-menu">
       <ul>
         <%= for %{id: id, icon: icon} <- @panels do %>
-          <%= if @panel == id do %>
-            <li id="<%= "menu-item-#{id}" %>" phx-click="hidepanel" phx-value-panel="<%= id %>" class="active">
+          <%= if @panel_id == id do %>
+            <li id="<%= "menu-item-#{id}" %>" phx-click="hidepanel" phx-value-panel_id="<%= id %>" class="active">
           <% else %>
-            <li id="<%= "menu-item-#{id}" %>" phx-click="showpanel" phx-value-panel="<%= id %>">
+            <li id="<%= "menu-item-#{id}" %>" phx-click="showpanel" phx-value-panel_id="<%= id %>">
           <% end %>
               <svg class="menu-item">
                 <%= live_component @socket, Svg, image: icon %>
@@ -31,7 +31,7 @@
       >
       <%= for %{id: id, title: title, module: module, hook: hook} <- @panels do %>
       <article id="<%= id %>"
-               class="panel<%= if @panel == id, do: " in", else: " out" %>"
+               class="panel<%= if @panel_id == id, do: " in", else: " out" %>"
                <%= if hook, do: "phx-hook=\"#{hook}\"" %>
       >
         <header class="panel-title">
