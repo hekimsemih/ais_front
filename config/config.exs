@@ -8,7 +8,7 @@
 use Mix.Config
 
 config :ais_front,
-  ecto_repos: [AisFront.Repo]
+  ecto_repos: [AisFront.Repo, AisFront.RepoBack]
 
 # Configures the endpoint
 config :ais_front, AisFrontWeb.Endpoint,

@@ -2,6 +2,7 @@ defmodule AisFront.CoreTest do
   use AisFront.DataCase
 
   alias AisFront.Core
+  alias AisFront.RepoBack
 
   describe "core_shipinfos" do
     alias AisFront.Core.ShipInfos
@@ -19,14 +20,19 @@ defmodule AisFront.CoreTest do
       ship_infos
     end
 
+    setup do
+      # Explicitly get a connection before each test
+      :ok = Ecto.Adapters.SQL.Sandbox.checkout(RepoBack)
+    end
+
     test "list_core_shipinfos/0 returns all core_shipinfos" do
       ship_infos = ship_infos_fixture()
       assert Core.list_core_shipinfos() == [ship_infos]
     end
 
-    test "get_ship_infos!/1 returns the ship_infos with given id" do
+    test "get_ship_infos!/1 returns the ship_infos with given mmsi" do
       ship_infos = ship_infos_fixture()
-      assert Core.get_ship_infos!(ship_infos.id) == ship_infos
+      assert Core.get_ship_infos!(ship_infos.mmsi) == ship_infos
     end
 
     test "create_ship_infos/1 with valid data creates a ship_infos" do
@@ -85,13 +91,13 @@ defmodule AisFront.CoreTest do
     test "update_ship_infos/2 with invalid data returns error changeset" do
       ship_infos = ship_infos_fixture()
       assert {:error, %Ecto.Changeset{}} = Core.update_ship_infos(ship_infos, @invalid_attrs)
-      assert ship_infos == Core.get_ship_infos!(ship_infos.id)
+      assert ship_infos == Core.get_ship_infos!(ship_infos.mmsi)
     end
 
     test "delete_ship_infos/1 deletes the ship_infos" do
       ship_infos = ship_infos_fixture()
       assert {:ok, %ShipInfos{}} = Core.delete_ship_infos(ship_infos)
-      assert_raise Ecto.NoResultsError, fn -> Core.get_ship_infos!(ship_infos.id) end
+      assert_raise Ecto.NoResultsError, fn -> Core.get_ship_infos!(ship_infos.mmsi) end
     end
 
     test "change_ship_infos/1 returns a ship_infos changeset" do
