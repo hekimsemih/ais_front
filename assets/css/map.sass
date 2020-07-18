@@ -61,7 +61,7 @@ body
         list-style: none
         padding: 0.2em
         background-color: $white
-        border: 1px solid #555
+        border: 1px solid $grey-dark
         border-right: 0
         margin-bottom: 0.2em
         transition: padding-right 0.2s, border-radius 0.2s
@@ -95,20 +95,20 @@ body
       box-shadow: 0.2em 0.2em 0.8em scale-color($bg-color, $lightness: -80%)
 
       .panel-title
-        $color: #fff
+        $color: $white
         $bg-color: $blue
         color: $color
         background-color: $bg-color
         display: flex
         align-items: center
         height: 2.5em
+        padding: 0.5em
 
         .icon
           width: 2em
           height: 2em
-          margin-left: 0.5em
-          fill: #eee
-          stroke: #333
+          fill: $white
+          stroke: $grey-darkest
         h2,button
           margin: 0
         h2
@@ -158,4 +158,4 @@ body
     display: flex
 
     .map-footer-item
-      color: white
+      color: $white
