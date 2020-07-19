@@ -2,6 +2,17 @@ defmodule AisFront.Core.ShipInfos do
   use Ecto.Schema
   import Ecto.Changeset
 
+  defimpl Jason.Encoder do
+    def encode(value, opts) do
+      point = Geo.JSON.encode!(value.point)
+      keys = Map.keys(value)
+             |> Enum.filter(& &1 not in [:__struct__, :__meta__, :point])
+      m = Map.take(value, keys)
+          |> Map.put(:point, point)
+      Jason.Encode.map(m, opts)
+    end
+  end
+
   @primary_key {:mmsi, :integer, autogenerate: false}
   schema "core_shipinfos" do
     field :callsign, :string
