@@ -38,6 +38,22 @@ defmodule AisFront.Core do
   def get_ship_infos!(id), do: Repo.get!(ShipInfos, id)
 
   @doc """
+  Gets a single ship_infos
+
+  Returns nil if the Ship does not exist
+
+  #Examples
+
+      iex> get_ship_infos(123)
+      %ShipInfos{}
+
+      iex> get_ship_infos(456)
+      nil
+
+  """
+  def get_ship_infos(id), do: Repo.get(ShipInfos, id)
+
+  @doc """
   Creates a ship_infos.
 
   ## Examples
