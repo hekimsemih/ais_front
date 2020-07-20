@@ -1,4 +1,10 @@
 defmodule AisFrontWeb.Live.Component.Svg do
+  @moduledoc """
+  Svg component render SVG image as valid html tags. This component should live
+  between a <svg> tag (see: [https://hexdocs.pm/phoenix_live_view/Phoenix.LiveComponent.html#module-svg-support])
+
+  This component allow to manipulate SVG image style via css for example.
+  """
   use Phoenix.LiveComponent
   alias Phoenix.HTML
   require Logger

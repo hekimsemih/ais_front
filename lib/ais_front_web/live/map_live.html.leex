@@ -10,10 +10,12 @@
   <header id="map-header" class="bar">test</header>
 
   <section id="map-main">
+
     <section id="map" phx-hook="LoadMap"></section>
+
     <nav id="panel-menu">
       <ul>
-        <%= for %{id: id, icon: icon} <- @panels do %>
+        <%= for {id, %{icon: icon}} <- @panels do %>
           <%= if @panel_id == id do %>
             <li id="<%= "menu-item-#{id}" %>" phx-click="hidepanel" phx-value-panel_id="<%= id %>" class="active">
           <% else %>
@@ -26,13 +28,13 @@
         <% end %>
       </ul>
     </nav>
+
     <section id="panels"
              phx-hook="PanelVisibility"
       >
-      <%= for %{id: id, title: title, module: module, hook: hook} <- @panels do %>
+      <%= for {id, %{assigns: panel_assigns, title: title, module: module}} <- @panels do %>
       <article id="<%= id %>"
                class="panel<%= if @panel_id == id, do: " in", else: " out" %>"
-               <%= if hook, do: "phx-hook=\"#{hook}\"" %>
       >
         <header class="panel-title">
           <svg class="icon"><circle cx="50%" cy="50%" r="50%"/></svg>
@@ -41,10 +43,11 @@
             <%= live_component @socket, Svg, image: "cross.svg" %>
           </svg>
         </header>
-        <%= live_component @socket, module, id: id %>
+        <%= live_component @socket, module, Map.put(panel_assigns, :id, id) %>
       </article>
       <% end %>
     </section>
+
   </section>
 
   <footer id="map-footer" class="bar">
