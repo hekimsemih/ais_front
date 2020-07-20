@@ -94,12 +94,13 @@ lvs.hooks.PanelVisibility = {
     }
 };
 const changeinfosEvent = (detail) => { return new CustomEvent("changeinfos", {detail: detail}) };
+window.changeinfosEvent = changeinfosEvent;
 let shipinfos = null;
 lvs.hooks.ChangeInfos = {
     mounted(){
         shipinfos = this.el;
         this.el.addEventListener("changeinfos", (e) => {
-            this.pushEvent("changeinfos", e.detail, (reply, ref) =>
+            this.pushEventTo("#shipinfos > .panel-content", "changeinfos", e.detail, (reply, ref) =>
                 console.log("not sure what to do here"));
         });
     }
@@ -273,7 +274,7 @@ function loadMap(){
         map.on('click', function(evt) {
             map.forEachFeatureAtPixel(evt.pixel, function(feature) {
                 const featureId = feature.getId().split('.')[1];
-                shipinfos.dispatchEvent(changeinfosEvent({id: featureId}));
+                shipinfos.dispatchEvent(changeinfosEvent({mmsi: featureId}));
                 panels.dispatchEvent(showpanelEvent({panel_id: "shipinfos"}));
                 return true;
             }, {
