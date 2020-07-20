@@ -87,12 +87,15 @@ body
     .panel
       $bg-color: $white
       width: $panel_width
-      height: calc(100% - 2*#{$panel_margin})
+      max-height: calc(100% - 2*#{$panel_margin})
       margin: $panel_margin
       position: absolute
       top: 0em
       background-color: $bg-color
       box-shadow: 0.2em 0.2em 0.8em scale-color($bg-color, $lightness: -80%)
+      display: flex
+      flex-direction: column
+      border-radius: 0 0 0.8em 0
 
       .panel-title
         $color: $white
@@ -134,18 +137,27 @@ body
 
       .panel-content
         padding: 1em
+        overflow: auto
 
+        details
+          background: white
+          padding: 0.5em
+          border: 1px solid $grey-lightest
+          border-radius: 0.5em
+          summary:hover
+            cursor: pointer
         table
+          margin-top: 0.5em
           border-collapse: collapse
+          width: 100%
           tr,th,td
             border: 0
 
           tr
-            border-bottom: 1px solid
-            &:last-child
-              border-bottom: 0
+            &:nth-child(odd)
+              background-color: $grey-lightest
             th
-              border-right: 1px solid
+              text-align: left
 
     .panel.in
       left: 0em
