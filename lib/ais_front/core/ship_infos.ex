@@ -40,7 +40,7 @@ defmodule AisFront.Core.ShipInfos do
   @doc false
   def changeset(ship_infos, attrs) do
     ship_infos
-    |> cast(attrs, [:mmsi, :time, :valid_position, :cog, :sog, :heading, :pac, :rot, :navstat, :imo, :callsign, :name, :ship_type, :dim_bow, :dim_stern, :dim_port, :dim_starboard, :eta, :draught, :destination])
-    |> validate_required([:mmsi, :time, :valid_position, :cog, :sog, :heading, :pac, :rot, :navstat, :imo, :callsign, :name, :ship_type, :dim_bow, :dim_stern, :dim_port, :dim_starboard, :eta, :draught, :destination])
+    |> cast(attrs, [:mmsi, :time, :point, :valid_position, :cog, :sog, :heading, :pac, :rot, :navstat, :imo, :callsign, :name, :ship_type, :dim_bow, :dim_stern, :dim_port, :dim_starboard, :eta, :draught, :destination])
+    |> validate_required([:mmsi, :time, :point, :valid_position, :cog, :sog, :heading, :pac, :rot, :navstat, :imo, :callsign, :name, :ship_type, :dim_bow, :dim_stern, :dim_port, :dim_starboard, :eta, :draught, :destination])
   end
 end
