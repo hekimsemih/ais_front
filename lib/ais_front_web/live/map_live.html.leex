@@ -15,7 +15,7 @@
 
     <nav id="panel-menu">
       <ul>
-        <%= for {id, %{icon: icon}} <- @panels do %>
+        <%= for {id, %Panel{icon: icon}} <- @panels do %>
           <%= if @panel_id == id do %>
             <li id="<%= "menu-item-#{id}" %>" phx-click="hidepanel" phx-value-panel_id="<%= id %>" class="active">
           <% else %>
@@ -32,7 +32,7 @@
     <section id="panels"
              phx-hook="PanelVisibility"
       >
-      <%= for {id, %{assigns: panel_assigns, title: title, module: module}} <- @panels do %>
+      <%= for {id, %Panel{assigns: panel_assigns, icon: icon, module: module, title: title}} <- @panels do %>
       <article id="<%= id %>"
                class="panel<%= if @panel_id == id, do: " in", else: " out" %>"
       >
