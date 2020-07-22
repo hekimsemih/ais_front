@@ -83,6 +83,31 @@ defmodule AisFront.Core.ShipInfos do
     end).()
   end
 
+  @doc """
+  Return the date diff in a humanized format
+
+      iex> %AisFront.Core.ShipInfos{time: DateTime.add(DateTime.utc_now, 31, :second)} |> AisFront.Core.ShipInfos.pretty_date
+      "in 31 seconds"
+      iex> %AisFront.Core.ShipInfos{time: DateTime.add(DateTime.utc_now, -31, :second)} |> AisFront.Core.ShipInfos.pretty_date
+      "31 seconds ago"
+      iex> %AisFront.Core.ShipInfos{time: DateTime.add(DateTime.utc_now, 1, :second)} |> AisFront.Core.ShipInfos.pretty_date
+      "now"
+
+  """
   def pretty_date(shipinfos) do
+    now = DateTime.utc_now
+    dt = DateTime.diff(now, shipinfos.time)
+    pretty_dt =
+      dt
+      |> Timex.Duration.from_seconds
+      |> Timex.Format.Duration.Formatters.Humanized.format
+      |> String.split(", ")
+      |> Enum.take(2)
+      |> Enum.join(" and ")
+    cond do
+      dt > 30 -> Enum.join([pretty_dt, "ago"], " ")
+      dt < -30 -> Enum.join(["in", pretty_dt], " ")
+      true -> "now"
+    end
   end
 end
