@@ -6,6 +6,17 @@ defmodule AisFrontWeb.Live.Component.ShipInfos do
 
   alias AisFrontWeb.Struct.Panel
 
+  def mount(socket) do
+    {:ok, assign(socket, :opened_details, MapSet.new())}
+  end
+
+  defp open_details(details_name, opened_details) do
+    case details_name in opened_details do
+      true -> "open"
+      false -> ""
+    end
+  end
+
   def render(%{shipinfos: nil} = assigns) do
     ~L"""
       <section class="panel-content" phx-hook="ChangeInfos">
@@ -19,7 +30,7 @@ defmodule AisFrontWeb.Live.Component.ShipInfos do
     ~L"""
       <section class="panel-content" phx-hook="ChangeInfos">
         <h3><%= ShipInfos.pretty_name(@shipinfos) %></h3>
-        <details>
+        <details <%= open_details("raw", @opened_details) %> phx-click="update_details_state" phx-value-details_name="raw" phx-target="#shipinfos > .panel-content">
           <summary><b>Raw message</b></summary>
           <table>
             <%= for {k,v} <- @shipinfos do %>
@@ -54,5 +65,15 @@ defmodule AisFrontWeb.Live.Component.ShipInfos do
     shipinfos = Core.get_shipinfos(mmsi)
     send(self(), {:updatepanel, %{panel_id: :shipinfos, changes: %Panel{assigns: %{shipinfos: shipinfos}}}})
     {:noreply, assign(socket, shipinfos: shipinfos)}
+  end
+
+  def handle_event("update_details_state", %{"details_name" => details_name}, socket) do
+    socket = update(socket, :opened_details, fn od ->
+      case details_name in od do
+        true -> od |> MapSet.delete(details_name)
+        false -> od |> MapSet.put(details_name)
+      end
+    end)
+    {:noreply, socket}
   end
 end
