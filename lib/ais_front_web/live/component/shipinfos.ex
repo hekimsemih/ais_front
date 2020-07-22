@@ -3,6 +3,8 @@ defmodule AisFrontWeb.Live.Component.ShipInfos do
 
   alias AisFront.Core
 
+  alias AisFrontWeb.Struct.Panel
+
   def render(%{shipinfos: nil} = assigns) do
     ~L"""
       <section class="panel-content" phx-hook="ChangeInfos">
@@ -19,11 +21,27 @@ defmodule AisFrontWeb.Live.Component.ShipInfos do
         <details>
           <summary><b>Raw message</b></summary>
           <table>
-            <%= for k <- Map.keys(@shipinfos) |> Enum.filter(& &1 not in [:__meta__, :__struct__, :point]) do %>
+            <%= for {k,v} <- @shipinfos do %>
+              <%= case k do %>
+                <%= :point -> %>
+            <tr>
+              <th>latitude</th>
+              <td><%= elem(v.coordinates, 1) %></td>
+            </tr>
+            <tr>
+              <th>longitude</th>
+              <td><%= elem(v.coordinates, 0) %></td>
+            </tr>
+            <tr>
+              <th>srid</th>
+              <td><%= v.srid %></td>
+            </tr>
+                <%= _ -> %>
             <tr>
               <th><%= k %></th>
-              <td><%= Map.get(@shipinfos, k) %></td>
+              <td><%= v %></td>
             </tr>
+              <% end %>
             <% end %>
           </table>
         </details
@@ -32,8 +50,8 @@ defmodule AisFrontWeb.Live.Component.ShipInfos do
   end
 
   def handle_event("changeinfos", %{"mmsi" => mmsi}, socket) do
-    shipinfos = Core.get_ship_infos(mmsi)
-    send(self(), {:updatepanel, %{panel_id: :shipinfos, changes: %{assigns: %{shipinfos: shipinfos}}}})
+    shipinfos = Core.get_shipinfos(mmsi)
+    send(self(), {:updatepanel, %{panel_id: :shipinfos, changes: %Panel{assigns: %{shipinfos: shipinfos}}}})
     {:noreply, assign(socket, shipinfos: shipinfos)}
   end
 end
