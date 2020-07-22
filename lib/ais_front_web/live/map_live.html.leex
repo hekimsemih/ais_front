@@ -37,7 +37,9 @@
                class="panel<%= if @panel_id == id, do: " in", else: " out" %>"
       >
         <header class="panel-title">
-          <svg class="icon"><circle cx="50%" cy="50%" r="50%"/></svg>
+          <svg class="icon">
+            <%= live_component @socket, Svg, image: icon %>
+          </svg>
           <h2><%= title %></h2>
           <svg class="close-button hide-panel" phx-click="hidepanel" phx-value-panel="<%= id %>">
             <%= live_component @socket, Svg, image: "cross.svg" %>

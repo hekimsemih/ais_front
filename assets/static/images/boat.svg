@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg version="1.1" viewBox="0 0 210 297" xmlns="http://www.w3.org/2000/svg">
- <path d="m105.83 26.458-79.375 238.12c58.208-42.333 100.54-42.333 158.75 0z" fill="#e3dbdb" marker-end="" stroke="#000" stroke-linejoin="round" stroke-width="2.6458" style="paint-order:normal"/>
+ <path id="boat" d="m105.83 26.458-79.375 238.12c58.208-42.333 100.54-42.333 158.75 0z" marker-end="" stroke-linejoin="round" stroke-width="5" style="paint-order:normal"/>
 </svg>
