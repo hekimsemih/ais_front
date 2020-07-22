@@ -19,9 +19,15 @@ defmodule AisFrontWeb.MapLive do
         page_title: "Watch AIS ships in real time",
         panel_id: nil,
         panels: %Panels{
+          attributions: %Panel{title: "Attributions", icon: "cross.svg", module: Search},
+          configuration: %Panel{title: "Configuration", icon: "cross.svg", module: Search},
+          help: %Panel{title: "Help", icon: "cross.svg", module: Search},
+          infos: %Panel{title: "Easy infos", icon: "cross.svg", module: Search},
+          legends: %Panel{title: "Legends", icon: "cross.svg", module: Search},
+          positions: %Panel{title: "Live positions", icon: "cross.svg", module: Search},
           search: %Panel{title: "Search", icon: "search.svg", module: Search},
           shipinfos: %Panel{assigns: %{shipinfos: nil}, title: "Ship Infos", icon: "boat.svg", module: ShipInfos},
-          attributions: %Panel{title: "Attributions", icon: "cross.svg", module: Search}
+          tools: %Panel{title: "Tools", icon: "cross.svg", module: Search}
         }
       )
     }

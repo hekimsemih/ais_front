@@ -1,6 +1,16 @@
 defmodule AisFrontWeb.Struct.Panels do
   alias AisFrontWeb.Struct.Panel
-  defstruct [search: %Panel{}, shipinfos: %Panel{}, attributions: %Panel{}]
+  defstruct [
+    attributions: %Panel{},
+    configuration: %Panel{},
+    help: %Panel{},
+    infos: %Panel{},
+    legends: %Panel{},
+    positions: %Panel{},
+    search: %Panel{},
+    shipinfos: %Panel{},
+    tools: %Panel{}
+  ]
 
   defimpl Enumerable do
     def count(_panels), do: {:ok, 3}
