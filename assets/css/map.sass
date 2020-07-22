@@ -150,6 +150,10 @@ body
           border-radius: 0.5em
           summary:hover
             cursor: pointer
+        details[open] .details-content
+          animation-name: invisiblyGrowFontSize, fadeIn
+          animation-duration: 200ms, 200ms
+          animation-delay: 0ms, 100ms
         table
           margin-top: 0.5em
           border-collapse: collapse
@@ -177,3 +181,18 @@ body
 
     .map-footer-item
       color: $white
+
+@keyframes invisiblyGrowFontSize
+  0%
+    font-size: 0
+    opacity: 0
+  100%
+    font-size: 1em
+    opacity: 0
+
+@keyframes fadeIn
+  0%
+    opacity: 0
+  100%
+    opacity: 1
+
