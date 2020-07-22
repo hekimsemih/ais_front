@@ -22,99 +22,99 @@ defmodule AisFront.Core do
   end
 
   @doc """
-  Gets a single ship_infos.
+  Gets a single shipinfos.
 
   Raises `Ecto.NoResultsError` if the Ship infos does not exist.
 
   ## Examples
 
-      iex> get_ship_infos!(123)
+      iex> get_shipinfos!(123)
       %ShipInfos{}
 
-      iex> get_ship_infos!(456)
+      iex> get_shipinfos!(456)
       ** (Ecto.NoResultsError)
 
   """
-  def get_ship_infos!(id), do: Repo.get!(ShipInfos, id)
+  def get_shipinfos!(id), do: Repo.get!(ShipInfos, id)
 
   @doc """
-  Gets a single ship_infos
+  Gets a single shipinfos
 
   Returns nil if the Ship does not exist
 
   #Examples
 
-      iex> get_ship_infos(123)
+      iex> get_shipinfos(123)
       %ShipInfos{}
 
-      iex> get_ship_infos(456)
+      iex> get_shipinfos(456)
       nil
 
   """
-  def get_ship_infos(id), do: Repo.get(ShipInfos, id)
+  def get_shipinfos(id), do: Repo.get(ShipInfos, id)
 
   @doc """
-  Creates a ship_infos.
+  Creates a shipinfos.
 
   ## Examples
 
-      iex> create_ship_infos(%{field: value})
+      iex> create_shipinfos(%{field: value})
       {:ok, %ShipInfos{}}
 
-      iex> create_ship_infos(%{field: bad_value})
+      iex> create_shipinfos(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_ship_infos(attrs \\ %{}) do
+  def create_shipinfos(attrs \\ %{}) do
     %ShipInfos{}
     |> ShipInfos.changeset(attrs)
     |> Repo.insert()
   end
 
   @doc """
-  Updates a ship_infos.
+  Updates a shipinfos.
 
   ## Examples
 
-      iex> update_ship_infos(ship_infos, %{field: new_value})
+      iex> update_shipinfos(shipinfos, %{field: new_value})
       {:ok, %ShipInfos{}}
 
-      iex> update_ship_infos(ship_infos, %{field: bad_value})
+      iex> update_shipinfos(shipinfos, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_ship_infos(%ShipInfos{} = ship_infos, attrs) do
-    ship_infos
+  def update_shipinfos(%ShipInfos{} = shipinfos, attrs) do
+    shipinfos
     |> ShipInfos.changeset(attrs)
     |> Repo.update()
   end
 
   @doc """
-  Deletes a ship_infos.
+  Deletes a shipinfos.
 
   ## Examples
 
-      iex> delete_ship_infos(ship_infos)
+      iex> delete_shipinfos(shipinfos)
       {:ok, %ShipInfos{}}
 
-      iex> delete_ship_infos(ship_infos)
+      iex> delete_shipinfos(shipinfos)
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_ship_infos(%ShipInfos{} = ship_infos) do
-    Repo.delete(ship_infos)
+  def delete_shipinfos(%ShipInfos{} = shipinfos) do
+    Repo.delete(shipinfos)
   end
 
   @doc """
-  Returns an `%Ecto.Changeset{}` for tracking ship_infos changes.
+  Returns an `%Ecto.Changeset{}` for tracking shipinfos changes.
 
   ## Examples
 
-      iex> change_ship_infos(ship_infos)
+      iex> change_shipinfos(shipinfos)
       %Ecto.Changeset{data: %ShipInfos{}}
 
   """
-  def change_ship_infos(%ShipInfos{} = ship_infos, attrs \\ %{}) do
-    ShipInfos.changeset(ship_infos, attrs)
+  def change_shipinfos(%ShipInfos{} = shipinfos, attrs \\ %{}) do
+    ShipInfos.changeset(shipinfos, attrs)
   end
 end
