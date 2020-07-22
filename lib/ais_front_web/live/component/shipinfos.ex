@@ -5,9 +5,22 @@ defmodule AisFrontWeb.Live.Component.ShipInfos do
   alias AisFront.Core.ShipInfos
 
   alias AisFrontWeb.Struct.Panel
+  alias AisFrontWeb.Live.Component.ShipInfos.Raw
+  alias AisFrontWeb.Live.Component.ShipInfos.None
 
   def mount(socket) do
-    {:ok, assign(socket, :opened_details, MapSet.new())}
+    {
+      :ok,
+      assign(socket,
+        opened_details: MapSet.new(["description"]),
+        widgets: %{
+          analysis: %{summary: "Analysis", module: None},
+          description: %{summary: "Description", module: None},
+          general: %{summary: "General", module: None},
+          raw: %{summary: "Raw content", module: Raw}
+        }
+      )
+    }
   end
 
   defp open_details(details_name, opened_details) do
@@ -26,37 +39,18 @@ defmodule AisFrontWeb.Live.Component.ShipInfos do
     """
   end
 
-  def render(%{shipinfos: shipinfos} = assigns) do
+  def render(%{shipinfos: _shipinfos} = assigns) do
     ~L"""
       <section class="panel-content" phx-hook="ChangeInfos">
         <h3><%= ShipInfos.pretty_name(@shipinfos) %></h3>
-        <details <%= open_details("raw", @opened_details) %> phx-click="update_details_state" phx-value-details_name="raw" phx-target="#shipinfos > .panel-content">
-          <summary><b>Raw message</b></summary>
-          <table>
-            <%= for {k,v} <- @shipinfos do %>
-              <%= case k do %>
-                <%= :point -> %>
-            <tr>
-              <th>latitude</th>
-              <td><%= elem(v.coordinates, 1) %></td>
-            </tr>
-            <tr>
-              <th>longitude</th>
-              <td><%= elem(v.coordinates, 0) %></td>
-            </tr>
-            <tr>
-              <th>srid</th>
-              <td><%= v.srid %></td>
-            </tr>
-                <% _ -> %>
-            <tr>
-              <th><%= k %></th>
-              <td><%= v %></td>
-            </tr>
-              <% end %>
-            <% end %>
-          </table>
-        </details
+        <%= for {k, v} <- @widgets do %>
+        <details <%= open_details(Atom.to_string(k), @opened_details) %> phx-click="update_details_state" phx-value-details_name=<%= Atom.to_string(k) %> phx-target="#shipinfos > .panel-content">
+          <summary><b><%= v.summary %></b></summary>
+          <div class="details-content">
+            <%= live_component @socket, v.module, shipinfos: @shipinfos %>
+          </div>
+        </details>
+        <% end %>
       </section>
     """
   end
