@@ -2,6 +2,7 @@ defmodule AisFrontWeb.Live.Component.ShipInfos do
   use Phoenix.LiveComponent
 
   alias AisFront.Core
+  alias AisFront.Core.ShipInfos
 
   alias AisFrontWeb.Struct.Panel
 
@@ -17,7 +18,7 @@ defmodule AisFrontWeb.Live.Component.ShipInfos do
   def render(%{shipinfos: shipinfos} = assigns) do
     ~L"""
       <section class="panel-content" phx-hook="ChangeInfos">
-        <h3><%= @shipinfos.mmsi %></h3>
+        <h3><%= ShipInfos.pretty_name(@shipinfos) %></h3>
         <details>
           <summary><b>Raw message</b></summary>
           <table>
@@ -36,7 +37,7 @@ defmodule AisFrontWeb.Live.Component.ShipInfos do
               <th>srid</th>
               <td><%= v.srid %></td>
             </tr>
-                <%= _ -> %>
+                <% _ -> %>
             <tr>
               <th><%= k %></th>
               <td><%= v %></td>
