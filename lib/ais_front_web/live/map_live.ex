@@ -1,7 +1,8 @@
 defmodule AisFrontWeb.MapLive do
+  @moduledoc """
+  Liveview module to render the map page
+  """
   use Phoenix.LiveView
-
-  alias AisFront.Core
 
   alias AisFrontWeb.Live.Component.ShipInfos
   alias AisFrontWeb.Live.Component.Search
