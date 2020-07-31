@@ -42,7 +42,7 @@ defmodule AisFrontWeb.Live.Component.ShipInfos do
   def render(%{shipinfos: _shipinfos} = assigns) do
     ~L"""
       <section class="panel-content" phx-hook="ChangeInfos">
-        <h3><%= ShipInfos.pretty_name(@shipinfos) %></h3>
+        <h3><%= ShipInfos.pretty_name!(@shipinfos) %></h3>
         <%= for {k, v} <- @widgets do %>
         <details <%= open_details(Atom.to_string(k), @opened_details) %> phx-click="update_details_state" phx-value-details_name=<%= Atom.to_string(k) %> phx-target="#shipinfos > .panel-content">
           <summary><b><%= v.summary %></b></summary>

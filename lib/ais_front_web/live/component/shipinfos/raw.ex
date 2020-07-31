@@ -1,11 +1,9 @@
 defmodule AisFrontWeb.Live.Component.ShipInfos.Raw do
   use Phoenix.LiveComponent
 
-  alias AisFront.Core.ShipInfos
-
-  def render(%{shipinfos: shipinfos} = assigns) do
+  def render(%{shipinfos: _shipinfos} = assigns) do
     ~L"""
-   <table>
+    <table>
       <%= for {k,v} <- @shipinfos do %>
         <%= case k do %>
           <%= :point -> %>
@@ -28,7 +26,7 @@ defmodule AisFrontWeb.Live.Component.ShipInfos.Raw do
       </tr>
         <% end %>
       <% end %>
-    </table> 
+    </table>
     """
   end
 end
