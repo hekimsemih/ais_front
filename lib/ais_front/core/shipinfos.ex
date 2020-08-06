@@ -2,6 +2,12 @@ defmodule AisFront.Core.ShipInfos do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias Geo.Point
+
+  alias __MODULE__
+  alias AisFront.Units.{Angle, Distance, Speed, ROT}
+  alias AisFront.Coordinates
+
   defimpl Jason.Encoder do
     def encode(value, opts) do
       point = Geo.JSON.encode!(value.point)
@@ -59,22 +65,39 @@ defmodule AisFront.Core.ShipInfos do
     |> validate_required([:mmsi, :time, :point])
   end
 
+  def field_to_unit(key, value, opts) do
+    cond do
+      key in [:dim_bow, :dim_port, :dim_starboard, :dim_stern, :draught]->
+        Distance.new(value, :m)
+      key in [:cog, :heading] ->
+        Angle.new(value, :dd)
+      key in [:rot] ->
+        ROT.new(value, :deg_min)
+      key in [:sog] ->
+        Speed.new(value, :knots)
+      key in [:point] ->
+        Coordinates.from_point!(value)
+      true -> value
+    end
+  end
+
   @doc """
   Return a well-formated name for the ship based on the availability of name and callsign.
 
   ## Examples
 
-      iex> %AisFront.Core.ShipInfos{name: "alpha", callsign: "FE3G", mmsi: 1234} |> AisFront.Core.ShipInfos.pretty_name
+      iex> alias AisFront.Core.ShipInfos
+      iex> %ShipInfos{name: "alpha", callsign: "FE3G", mmsi: 1234} |> ShipInfos.pretty_name!
       "alpha@FE3G (1234)"
-      iex> %AisFront.Core.ShipInfos{name: "", callsign: "FE3G", mmsi: 1234} |> AisFront.Core.ShipInfos.pretty_name
+      iex> %ShipInfos{name: "", callsign: "FE3G", mmsi: 1234} |> ShipInfos.pretty_name!
       "@FE3G (1234)"
-      iex> %AisFront.Core.ShipInfos{name: "beta", callsign: "", mmsi: 1234} |> AisFront.Core.ShipInfos.pretty_name
+      iex> %ShipInfos{name: "beta", callsign: "", mmsi: 1234} |> ShipInfos.pretty_name!
       "beta (1234)"
-      iex> %AisFront.Core.ShipInfos{name: "", callsign: "", mmsi: 1234} |> AisFront.Core.ShipInfos.pretty_name
+      iex> %ShipInfos{name: "", callsign: "", mmsi: 1234} |> ShipInfos.pretty_name!
       "(1234)"
 
   """
-  def pretty_name(shipinfos) do
+  def pretty_name!(shipinfos) do
     {shipinfos.name, shipinfos.callsign, shipinfos.mmsi}
     |> (fn
       {"", "", m} -> "(#{m})"
@@ -86,15 +109,18 @@ defmodule AisFront.Core.ShipInfos do
   @doc """
   Return the date diff in a humanized format
 
-      iex> %AisFront.Core.ShipInfos{time: DateTime.add(DateTime.utc_now, 31, :second)} |> AisFront.Core.ShipInfos.pretty_date
-      "in 31 seconds"
-      iex> %AisFront.Core.ShipInfos{time: DateTime.add(DateTime.utc_now, -31, :second)} |> AisFront.Core.ShipInfos.pretty_date
-      "31 seconds ago"
-      iex> %AisFront.Core.ShipInfos{time: DateTime.add(DateTime.utc_now, 1, :second)} |> AisFront.Core.ShipInfos.pretty_date
+      iex> alias AisFront.Core.ShipInfos
+      iex> %ShipInfos{time: DateTime.add(DateTime.utc_now, 40, :second)} |> ShipInfos.pretty_date!
+      "in 40 seconds"
+      iex> %ShipInfos{time: DateTime.add(DateTime.utc_now, -40, :second)} |> ShipInfos.pretty_date!
+      "40 seconds ago"
+      iex> %ShipInfos{time: DateTime.add(DateTime.utc_now, 1, :second)} |> ShipInfos.pretty_date!
       "now"
+      iex> %ShipInfos{time: DateTime.add(DateTime.utc_now, 100000, :second)} |> ShipInfos.pretty_date!
+      "in 1 day and 3 hours"
 
   """
-  def pretty_date(shipinfos) do
+  def pretty_date!(shipinfos) do
     now = DateTime.utc_now
     dt = DateTime.diff(now, shipinfos.time)
     pretty_dt =
