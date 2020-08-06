@@ -136,4 +136,14 @@ defmodule AisFront.Core.ShipInfos do
       true -> "now"
     end
   end
+
+  @doc """
+  Return a point in various formats dependending on srid unit type
+  """
+  def pretty_point!(shipinfos, opts \\ [])
+  def pretty_point!(%ShipInfos{point: %Point{} = point}, opts) do
+    point
+    |> Coordinates.from_point!
+    |> Coordinates.to_tuple_string(opts)
+  end
 end
