@@ -65,14 +65,17 @@ defmodule AisFront.Core.ShipInfos do
     |> validate_required([:mmsi, :time, :point])
   end
 
-  def field_to_unit(key, value, opts) do
+  @doc """
+  Return a shipinfos field in a corresponding unit
+  """
+  def field_to_unit(key, value) do
     cond do
       key in [:dim_bow, :dim_port, :dim_starboard, :dim_stern, :draught]->
         Distance.new(value, :m)
       key in [:cog, :heading] ->
         Angle.new(value, :dd)
       key in [:rot] ->
-        ROT.new(value, :deg_min)
+        ROT.new(value, :ais)
       key in [:sog] ->
         Speed.new(value, :knots)
       key in [:point] ->
