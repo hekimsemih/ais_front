@@ -34,7 +34,7 @@ defmodule AisFrontWeb.Live.Component.ShipInfos do
     ~L"""
       <section class="panel-content" phx-hook="ChangeInfos">
         <p>No ship selected. Click on one to see informations about it.</p>
-        <button phx-click="changeinfos" phx-value-mmsi="2523601" phx-target="#shipinfos > .panel-content">TEST</button>
+        <button phx-click="changeinfos" phx-value-mmsi="41291111" phx-target="#shipinfos > .panel-content">TEST</button>
       </section>
     """
   end
@@ -44,8 +44,10 @@ defmodule AisFrontWeb.Live.Component.ShipInfos do
       <section class="panel-content" phx-hook="ChangeInfos">
         <h3><%= ShipInfos.pretty_name!(@shipinfos) %></h3>
         <%= for {k, v} <- @widgets do %>
-        <details <%= open_details(Atom.to_string(k), @opened_details) %> phx-click="update_details_state" phx-value-details_name=<%= Atom.to_string(k) %> phx-target="#shipinfos > .panel-content">
-          <summary><b><%= v.summary %></b></summary>
+        <details <%= open_details(Atom.to_string(k), @opened_details) %>>
+          <summary phx-click="update_details_state" phx-value-details_name=<%= Atom.to_string(k) %> phx-target="#shipinfos > .panel-content">
+            <strong><%= v.summary %></strong>
+          </summary>
           <div class="details-content">
             <%= live_component @socket, v.module, shipinfos: @shipinfos %>
           </div>

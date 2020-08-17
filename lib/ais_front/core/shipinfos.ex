@@ -68,7 +68,7 @@ defmodule AisFront.Core.ShipInfos do
   @doc """
   Return a shipinfos field in a corresponding unit
   """
-  def field_to_unit(key, value) do
+  def field_to_unit({key, value} = _field) do
     cond do
       key in [:dim_bow, :dim_port, :dim_starboard, :dim_stern, :draught]->
         Distance.new(value, :m)
@@ -81,6 +81,121 @@ defmodule AisFront.Core.ShipInfos do
       key in [:point] ->
         Coordinates.from_point!(value)
       true -> value
+    end
+  end
+
+  @doc """
+  Return various meta information associated to a field key
+
+  TODO: Maybe somewhere else. UI side ? needed for translation.
+  """
+  def field_meta({key, _value} = _field) do
+    case key do
+      :callsign ->
+        %{
+          short_desc: "callsign",
+          long_desc: "radio callsign identifier",
+        }
+      :cog ->
+        %{
+          short_desc: "COG",
+          long_desc: "Course Over Ground",
+        }
+      :destination ->
+        %{
+          short_desc: "destination",
+          long_desc: "destination",
+        }
+      :dim_bow ->
+        %{
+          short_desc: "ship bow",
+          long_desc: "dimension from ais to ship bow",
+        }
+      :dim_port ->
+        %{
+          short_desc: "ship port",
+          long_desc: "dimension from ais to ship port",
+        }
+      :dim_starboard ->
+        %{
+          short_desc: "ship starboard",
+          long_desc: "dimension from ais to ship starboard",
+        }
+        :dim_stern ->
+        %{
+          short_desc: "ship stern",
+          long_desc: "dimension from ais to ship stern",
+        }
+        :draught ->
+        %{
+          short_desc: "draught",
+          long_desc: "draught of the ship",
+        }
+        :eta ->
+        %{
+          short_desc: "ETA",
+          long_desc: "Estimated Time of Arrival",
+        }
+        :heading ->
+        %{
+          short_desc: "heading",
+          long_desc: "where the ship is heading. May be different from COG",
+        }
+        :imo ->
+        %{
+          short_desc: "IMO number",
+          long_desc: "International Maritime Organisation number",
+        }
+        :mmsi ->
+        %{
+          short_desc: "MMSI",
+          long_desc: "the MMSI identifier",
+        }
+        :name ->
+        %{
+          short_desc: "name",
+          long_desc: "name of the ship",
+        }
+        :navstat ->
+        %{
+          short_desc: "navstat",
+          long_desc: "AIS navigation information",
+        }
+        :pac ->
+        %{
+          short_desc: "position accuracy",
+          long_desc: "0 - low accuracy, 1 - high accuracy",
+        }
+        :point ->
+        %{
+          short_desc: "point",
+          long_desc: "geographic data informations",
+        }
+        :rot ->
+        %{
+          short_desc: "rate of turn",
+          long_desc: "rate of turn",
+        }
+        :ship_type ->
+        %{
+          short_desc: "ship type",
+          long_desc: "AIS ship type ",
+        }
+        :sog ->
+        %{
+          short_desc: "SOG",
+          long_desc: "Speed Over Ground",
+        }
+        :time ->
+        %{
+          short_desc: "time",
+          long_desc: "date and time when the position was emitted",
+        }
+        :valid_position ->
+        %{
+          short_desc: "valid position",
+          long_desc: "whether or not the position is considered a valid one by the GPS",
+        }
     end
   end
 
