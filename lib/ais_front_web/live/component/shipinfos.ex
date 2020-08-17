@@ -5,7 +5,6 @@ defmodule AisFrontWeb.Live.Component.ShipInfos do
   alias AisFront.Core.ShipInfos
 
   alias AisFrontWeb.Struct.Panel
-  alias AisFrontWeb.Live.Component.ShipInfos.Raw
   alias AisFrontWeb.Live.Component.ShipInfos.None
 
   def mount(socket) do
@@ -16,8 +15,8 @@ defmodule AisFrontWeb.Live.Component.ShipInfos do
         widgets: %{
           analysis: %{summary: "Analysis", module: None},
           description: %{summary: "Description", module: None},
-          general: %{summary: "General", module: None},
-          raw: %{summary: "Raw content", module: Raw}
+          general: %{summary: "General", module: AisFrontWeb.Live.Component.ShipInfos.General},
+          raw: %{summary: "Raw content", module: AisFrontWeb.Live.Component.ShipInfos.Raw}
         }
       )
     }

@@ -88,6 +88,9 @@ body
     $panel_margin: 0.5em
     $panel_width: 26em
     .panel
+      strong
+        color: black
+
       $bg-color: $white
       width: $panel_width
       max-height: calc(100% - 2*#{$panel_margin})
@@ -154,6 +157,8 @@ body
           animation-name: invisiblyGrowFontSize, fadeIn
           animation-duration: 200ms, 200ms
           animation-delay: 0ms, 100ms
+          padding: 0.5em
+          color: $grey-dark
         table
           margin-top: 0.5em
           border-collapse: collapse
@@ -166,6 +171,7 @@ body
               background-color: $grey-lightest
             th
               text-align: left
+              color: black
               abbr:hover
                 cursor: help
             td
