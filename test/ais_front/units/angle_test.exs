@@ -51,6 +51,8 @@ defmodule AisFront.Units.AngleTest do
     assert Angle.new(1, :dd) |> to_string == "1°"
     assert Angle.new({1,0}, :dm) |> to_string == "1°0'"
     assert Angle.new({1,0,0}, :dms) |> to_string == "1°0'0''"
+
+    assert Angle.new(100, :dd) |> to_string == "100°"
   end
 end
 

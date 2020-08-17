@@ -162,15 +162,15 @@ defmodule AisFront.Units.Angle do
 
     def to_string(%Angle{value: {d,m}, unit: :dm}) do
       m = m |> Decimal.round(@unit_precision[:min]) |> Decimal.reduce
-      "#{d}#{@unit_repr[:dd]}#{m}#{@unit_repr[:min]}"
+      "#{Decimal.to_string(d, :normal)}#{@unit_repr[:dd]}#{m}#{@unit_repr[:min]}"
     end
     def to_string(%Angle{value: {d,m,s}, unit: :dms}) do
       s = s |> Decimal.round(@unit_precision[:sec]) |> Decimal.reduce
-      "#{d}#{@unit_repr[:dd]}#{m}#{@unit_repr[:min]}#{s}#{@unit_repr[:sec]}"
+      "#{Decimal.to_string(d, :normal)}#{@unit_repr[:dd]}#{m}#{@unit_repr[:min]}#{s}#{@unit_repr[:sec]}"
     end
     def to_string(%Angle{value: value, unit: unit}) do
       value = value |> Decimal.round(@unit_precision[unit]) |> Decimal.reduce
-      "#{value}#{@unit_repr[unit]}"
+      "#{Decimal.to_string(value, :normal)}#{@unit_repr[unit]}"
     end
   end
 end
