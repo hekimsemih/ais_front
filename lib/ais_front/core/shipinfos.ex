@@ -260,8 +260,9 @@ defmodule AisFront.Core.ShipInfos do
   """
   def pretty_point!(shipinfos, opts \\ [])
   def pretty_point!(%ShipInfos{point: %Point{} = point}, opts) do
-    point
-    |> Coordinates.from_point!
-    |> Coordinates.to_tuple_string(opts)
+    {y, x} = point
+             |> Coordinates.from_point!
+             |> Coordinates.to_tuple_string(opts)
+    "#{y}, #{x}"
   end
 end
