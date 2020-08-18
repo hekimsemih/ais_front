@@ -80,7 +80,7 @@ defmodule AisFront.Core.ShipInfos do
         Speed.new(value, :knots)
       key in [:point] ->
         Coordinates.from_point!(value)
-      true -> value
+      true -> if value in ["", nil], do: "-", else: value
     end
   end
 
