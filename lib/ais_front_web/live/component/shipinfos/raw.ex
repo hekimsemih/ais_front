@@ -20,11 +20,11 @@ defmodule AisFrontWeb.Live.Component.ShipInfos.Raw do
           <%= :point -> %>
       <tr>
         <th>latitude</th>
-        <td><%= y_coord(field) %></td>
+        <td><%= x_coord(field) %></td>
       </tr>
       <tr>
         <th>longitude</th>
-        <td><%= x_coord(field) %></td>
+        <td><%= y_coord(field) %></td>
       </tr>
       <tr>
         <th><abbr title="Spatial Reference Identifier">SRID</abbr></th>
