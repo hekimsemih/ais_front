@@ -19,7 +19,7 @@ defmodule AisFront.Coordinates do
   defstruct coordinates: {Angle.new(0, :dd), Angle.new(0, :dd)},
     srid: @default_srid
 
-  defp validate_coordinates(%Coordinates{coordinates: {%ytype{} = y, %xtype{} = x}, srid: srid} = coordinates) do
+  defp validate_coordinates(%Coordinates{coordinates: {%xtype{} = x, %ytype{} = y}, srid: srid} = coordinates) do
     cond do
       srid not in @possible_srid ->
         {:error, "srid #{srid} is not recognized."}
@@ -46,11 +46,11 @@ defmodule AisFront.Coordinates do
   Create a %Coordinates{} from %Geo.Point{}
   """
   @spec from_point!(Point.t()) :: Coordinates.t()
-  def from_point!(%Point{coordinates: {y,x}, srid: srid}) do
+  def from_point!(%Point{coordinates: {x, y}, srid: srid}) do
     {unit_module, default_unit} = @srid_units[:"#{srid}"]
     coordinates = {
-      unit_module.new(y, default_unit),
-      unit_module.new(x, default_unit)
+      unit_module.new(x, default_unit),
+      unit_module.new(y, default_unit)
     }
     %Coordinates{coordinates: coordinates, srid: srid}
     |> validate_coordinates
@@ -65,10 +65,10 @@ defmodule AisFront.Coordinates do
     Keyword.merge(default_opts, opts)
   end
 
-  defp compass(y, x) do
+  defp compass(x, y) do
     [
-      {y, "W", "E"},
-      {x, "S", "N"}
+      {x, "E", "W"},
+      {y, "S", "N"}
     ]
     |> Enum.map(fn {coord, neg, pos} ->
       compass = if String.first(coord) == "-", do: neg, else: pos
@@ -90,7 +90,7 @@ defmodule AisFront.Coordinates do
   Set :compass? opt to true if you want the coordinates to add compass indicator
   """
   @spec to_tuple_string(Coordinates.t(), keyword()) :: {String.t(), String.t()}
-  def to_tuple_string(%Coordinates{coordinates: {y, x}} = coordinates, opts \\ []) do
+  def to_tuple_string(%Coordinates{coordinates: {x, y}} = coordinates, opts \\ []) do
     case validate_coordinates(coordinates) do
       {:error, error} -> raise ArgumentError, message: "Bad Coordinates: " <> error
       {:ok, _coordinates} -> :ok
@@ -100,12 +100,12 @@ defmodule AisFront.Coordinates do
     unit = Keyword.get(opts, :unit)
     compass? = Keyword.get(opts, :compass?)
 
-    y = Convertible.convert(y, unit) |> to_string
     x = Convertible.convert(x, unit) |> to_string
+    y = Convertible.convert(y, unit) |> to_string
 
     case compass? do
-      true -> compass(y, x)
-      false -> {y, x}
+      true -> compass(x, y)
+      false -> {x, y}
     end
   end
 end
