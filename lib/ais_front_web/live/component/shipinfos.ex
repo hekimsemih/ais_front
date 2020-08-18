@@ -11,10 +11,9 @@ defmodule AisFrontWeb.Live.Component.ShipInfos do
     {
       :ok,
       assign(socket,
-        opened_details: MapSet.new(["description"]),
+        opened_details: MapSet.new(["general"]),
         widgets: %{
           analysis: %{summary: "Analysis", module: None},
-          description: %{summary: "Description", module: None},
           general: %{summary: "General", module: AisFrontWeb.Live.Component.ShipInfos.General},
           raw: %{summary: "Raw content", module: AisFrontWeb.Live.Component.ShipInfos.Raw}
         }
