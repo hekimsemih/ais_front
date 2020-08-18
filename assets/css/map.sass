@@ -146,6 +146,9 @@ body
         overflow: auto
         scrollbar-width: thin
 
+        hr
+          color: $white
+
         details
           background: white
           padding: 0.5em
@@ -177,6 +180,34 @@ body
             td
               text-align: right
 
+        #shipinfos-jump
+          ul
+            display: flex
+            justify-content: space-around
+            padding: 0
+            li.jump-button
+              list-style: none
+              width: 3em
+              height: 3em
+              display: flex
+              justify-content: center
+              align-items: center
+              border: 1px solid black
+              border-radius: 3em
+              cursor: pointer
+            li.jump-button:hover
+              background-color: $grey-lightest
+            .large-jump
+              width: 1em
+              height: 1em
+            .medium-jump
+              width: 1.8em
+              height: 1.8em
+            .close-jump
+              width: 2.6em
+              height: 2.6em
+
+
     .panel.in
       left: 0em
       transition: left 0.2s
@@ -186,6 +217,7 @@ body
 
   #map-footer
     display: flex
+    justify-content: space-between
 
     .map-footer-item
       color: $white

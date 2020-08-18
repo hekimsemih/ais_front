@@ -3,6 +3,12 @@ defmodule AisFrontWeb.Live.Component.ShipInfos.General do
 
   alias AisFront.Core.ShipInfos
 
+  defp coordinates(shipinfos) do
+    coordinates = shipinfos.point.coordinates
+                  |> Tuple.to_list
+                  |> Enum.join(",")
+    "[#{coordinates}]"
+  end
   def render(%{shipinfos: _shipinfos} = assigns) do
     ~L"""
     <div id="shipinfos-description">
@@ -20,7 +26,27 @@ defmodule AisFrontWeb.Live.Component.ShipInfos.General do
         <strong><%= ShipInfos.pretty_point!(@shipinfos, unit: :dms, compass?: true) %></strong>
       </p>
     </div>
+    <hr/>
+    <div id="shipinfos-jump">
+      <h4>Jump to ship:</h4>
+      <ul>
+       <li class="jump-button" title="large">
+         <svg class="large-jump" onclick="jumpto(<%= coordinates(@shipinfos) %>, 6)">
+           <%= live_component @socket, Svg, image: "boat.svg" %>
+         </svg>
+       </li>
+       <li class="jump-button" title="medium">
+         <svg class="medium-jump" onclick="jumpto(<%= coordinates(@shipinfos) %>, 12)">
+           <%= live_component @socket, Svg, image: "boat.svg" %>
+         </svg>
+       </li>
+       <li class="jump-button" title="close">
+         <svg class="close-jump" onclick="jumpto(<%= coordinates(@shipinfos) %>, 18)">
+           <%= live_component @socket, Svg, image: "boat.svg" %>
+         </svg>
+       </li>
+      </ul>
+    </div>
     """
   end
 end
-

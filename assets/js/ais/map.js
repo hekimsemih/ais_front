@@ -24,12 +24,17 @@ import sync from 'ol-hashed';
 //<--Global variables
 const mousePositionControl = new MousePosition({
     coordinateFormat: createStringXY(4),
-    projection: 'EPSG:3857',
+    projection: 'EPSG:4326',
     // comment the following two lines to have the mouse position
     // be placed within the map.
     className: 'custom-mouse-position',
     target: document.getElementById('mouse-position'),
     undefinedHTML: '&nbsp;'
+});
+
+const view = new View({
+    center: fromLonLat([0, 0]),
+    zoom: 2
 });
 
 const map = new Map({
@@ -42,10 +47,7 @@ const map = new Map({
     //     osmLayer,
     //     webglLayer,
     // ],
-    view: new View({
-        center: fromLonLat([0, 0]),
-        zoom: 2
-    })
+    view: view
 });
 
 const webglSource = new VectorSource({
@@ -267,7 +269,7 @@ function loadMap(){
 
         // map.addLayer(osmLayer);
         map.addLayer(stamenLayer);
-        // map.addLayer(webglLayer);
+        map.addLayer(webglLayer);
         map.setTarget("map");
 
         //<-- map events
@@ -320,4 +322,10 @@ function loadMap(){
     });
 }
 //-->
+
+function jumpto(coordinates, zoom){
+    let position = fromLonLat(coordinates)
+    view.animate({zoom: zoom, center: position})
+}
+window.jumpto = jumpto;
 // vim: set foldmethod=marker foldmarker=<--,--> :
