@@ -14,7 +14,7 @@ defmodule AisFrontWeb.Live.Component.ShipInfos.Raw do
   end
   def render(%{shipinfos: _shipinfos} = assigns) do
     ~L"""
-    <table>
+    <table id="raw-content">
       <%= for {k, v} = field <- @shipinfos do %>
         <%= case k do %>
           <%= :point -> %>
