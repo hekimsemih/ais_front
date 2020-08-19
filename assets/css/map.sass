@@ -169,6 +169,7 @@ body
           tr,th,td
             border: 0
 
+        table#raw-content
           tr
             &:nth-child(odd)
               background-color: $grey-lightest
@@ -180,6 +181,13 @@ body
             td
               text-align: right
 
+        #shipinfos-dimensions
+          table
+            td
+              text-align: center
+          #boat-repr
+            max-width: 100%
+            height: calc(0.6*#{$panel-width} - 6em)
         #shipinfos-jump
           ul
             display: flex

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="SVGRoot" version="1.1" viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
+ <defs>
+  <marker id="marker2946" style="overflow:visible" orient="auto">
+   <path transform="scale(-.4) translate(-4.5)" d="m5.77 0-8.65 5v-10l8.65 5z" style="fill-rule:evenodd;fill:#fff;stroke-width:1pt;stroke:#000"/>
+  </marker>
+  <marker id="marker2894" style="overflow:visible" orient="auto">
+   <path transform="scale(.4) translate(-4.5)" d="m5.77 0-8.65 5v-10l8.65 5z" style="fill-rule:evenodd;fill:#fff;stroke-width:1pt;stroke:#000"/>
+  </marker>
+  <marker id="EmptyTriangleInM" style="overflow:visible" orient="auto">
+   <path transform="scale(-.4) translate(-4.5)" d="m5.77 0-8.65 5v-10l8.65 5z" style="fill-rule:evenodd;fill:#fff;stroke-width:1pt;stroke:#000"/>
+  </marker>
+  <marker id="EmptyTriangleOutM" style="overflow:visible" orient="auto">
+   <path transform="scale(.4) translate(-4.5)" d="m5.77 0-8.65 5v-10l8.65 5z" style="fill-rule:evenodd;fill:#fff;stroke-width:1pt;stroke:#000"/>
+  </marker>
+ </defs>
+ <g id="boat-layer">
+  <path id="boat" d="m15 5v40h55l20-20-20-20z" style="fill:#444;stroke-width:1px;stroke:#000"/>
+ </g>
+ <g id="tot-dims">
+  <path id="boat-width" class="tot-dim" d="m5 45v-40" style="fill:none;marker-end:url(#marker2894);marker-start:url(#marker2946);stroke-dasharray:2, 1;stroke:#000"/>
+  <path id="boat-length" class="tot-dim" d="m15 55h75" style="fill:none;marker-end:url(#EmptyTriangleOutM);marker-start:url(#EmptyTriangleInM);stroke-dasharray:2, 1;stroke:#000"/>
+ </g>
+</svg>
