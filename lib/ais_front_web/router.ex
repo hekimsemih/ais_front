@@ -26,9 +26,11 @@ defmodule AisFrontWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", AisFrontWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", AisFrontWeb do
+    pipe_through :api
+
+    resources "/ships", ShipinfosController, only: [:index, :show]
+  end
 
   # Enables LiveDashboard only for development
   #
