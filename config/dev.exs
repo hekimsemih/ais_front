@@ -1,6 +1,7 @@
 use Mix.Config
 
 # Configure your database
+# DB for Elixir
 config :ais_front, AisFront.Repo,
   username: "postgres",
   password: "postgres",
@@ -9,6 +10,7 @@ config :ais_front, AisFront.Repo,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
+# DB for Ais data
 config :ais_front, AisFront.RepoBack,
   username: "postgres",
   password: "postgres",
