@@ -48,8 +48,11 @@ defmodule AisFront.Units.Speed do
     @unit_repr %{ms: "m/s", kmh: "km/h", knots: "kn"}
     @unit_precision %{ms: 2, kmh: 2, knots: 2}
     def to_string(%Speed{value: value, unit: unit}) do
-      "#{Decimal.round(value, @unit_precision[unit])} #{@unit_repr[unit]}"
+      s = "#{Decimal.round(value, @unit_precision[unit])} #{@unit_repr[unit]}"
+      case unit do
+        :knots -> if Decimal.gt?(value, 1), do: s <> "s", else: s
+        _ -> s
+      end
     end
   end
 end
-
