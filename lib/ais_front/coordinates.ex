@@ -67,7 +67,7 @@ defmodule AisFront.Coordinates do
 
   defp compass(x, y) do
     [
-      {x, "E", "W"},
+      {x, "W", "E"},
       {y, "S", "N"}
     ]
     |> Enum.map(fn {coord, neg, pos} ->
