@@ -6,19 +6,19 @@ defmodule AisFront.Core do
   import Ecto.Query, warn: false
   alias AisFront.RepoBack, as: Repo
 
-  alias AisFront.Core.ShipInfos
+  alias AisFront.Core.Shipinfos
 
   @doc """
   Returns the list of core_shipinfos.
 
   ## Examples
 
-      iex> list_core_shipinfos()
-      [%ShipInfos{}, ...]
+      iex> list_shipinfos()
+      [%Shipinfos{}, ...]
 
   """
-  def list_core_shipinfos do
-    Repo.all(ShipInfos)
+  def list_shipinfos do
+    Repo.all(Shipinfos)
   end
 
   @doc """
@@ -29,13 +29,13 @@ defmodule AisFront.Core do
   ## Examples
 
       iex> get_shipinfos!(123)
-      %ShipInfos{}
+      %Shipinfos{}
 
       iex> get_shipinfos!(456)
       ** (Ecto.NoResultsError)
 
   """
-  def get_shipinfos!(id), do: Repo.get!(ShipInfos, id)
+  def get_shipinfos!(mmsi), do: Repo.get!(Shipinfos, mmsi)
 
   @doc """
   Gets a single shipinfos
@@ -45,13 +45,13 @@ defmodule AisFront.Core do
   #Examples
 
       iex> get_shipinfos(123)
-      %ShipInfos{}
+      %Shipinfos{}
 
       iex> get_shipinfos(456)
       nil
 
   """
-  def get_shipinfos(id), do: Repo.get(ShipInfos, id)
+  def get_shipinfos(mmsi), do: Repo.get(Shipinfos, mmsi)
 
   @doc """
   Creates a shipinfos.
@@ -59,15 +59,15 @@ defmodule AisFront.Core do
   ## Examples
 
       iex> create_shipinfos(%{field: value})
-      {:ok, %ShipInfos{}}
+      {:ok, %Shipinfos{}}
 
       iex> create_shipinfos(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
   def create_shipinfos(attrs \\ %{}) do
-    %ShipInfos{}
-    |> ShipInfos.changeset(attrs)
+    %Shipinfos{}
+    |> Shipinfos.changeset(attrs)
     |> Repo.insert()
   end
 
@@ -77,15 +77,15 @@ defmodule AisFront.Core do
   ## Examples
 
       iex> update_shipinfos(shipinfos, %{field: new_value})
-      {:ok, %ShipInfos{}}
+      {:ok, %Shipinfos{}}
 
       iex> update_shipinfos(shipinfos, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_shipinfos(%ShipInfos{} = shipinfos, attrs) do
+  def update_shipinfos(%Shipinfos{} = shipinfos, attrs) do
     shipinfos
-    |> ShipInfos.changeset(attrs)
+    |> Shipinfos.changeset(attrs)
     |> Repo.update()
   end
 
@@ -95,13 +95,13 @@ defmodule AisFront.Core do
   ## Examples
 
       iex> delete_shipinfos(shipinfos)
-      {:ok, %ShipInfos{}}
+      {:ok, %Shipinfos{}}
 
       iex> delete_shipinfos(shipinfos)
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_shipinfos(%ShipInfos{} = shipinfos) do
+  def delete_shipinfos(%Shipinfos{} = shipinfos) do
     Repo.delete(shipinfos)
   end
 
@@ -111,10 +111,10 @@ defmodule AisFront.Core do
   ## Examples
 
       iex> change_shipinfos(shipinfos)
-      %Ecto.Changeset{data: %ShipInfos{}}
+      %Ecto.Changeset{data: %Shipinfos{}}
 
   """
-  def change_shipinfos(%ShipInfos{} = shipinfos, attrs \\ %{}) do
-    ShipInfos.changeset(shipinfos, attrs)
+  def change_shipinfos(%Shipinfos{} = shipinfos, attrs \\ %{}) do
+    Shipinfos.changeset(shipinfos, attrs)
   end
 end

@@ -1,7 +1,7 @@
-defmodule AisFrontWeb.Live.Component.ShipInfos.General do
+defmodule AisFrontWeb.Live.Component.Shipinfos.General do
   use Phoenix.LiveComponent
 
-  alias AisFront.Core.ShipInfos
+  alias AisFront.Core.Shipinfos
   alias AisFrontWeb.Live.Component.Svg
   alias AisFront.Units.Distance
 
@@ -32,18 +32,18 @@ defmodule AisFrontWeb.Live.Component.ShipInfos.General do
     <article id="shipinfos-jump">
       <h4>Jump to ship:</h4>
       <ul>
-        <li class="jump-button" title="large">
-          <svg class="large-jump" onclick="jumpto(<%= coordinates(@shipinfos) %>, 6)">
+        <li class="jump-button" title="large" onclick="jumpto(<%= coordinates(@shipinfos) %>, 6)">
+          <svg class="large-jump">
             <%= live_component @socket, Svg, image: "boat.svg" %>
           </svg>
         </li>
-        <li class="jump-button" title="medium">
-          <svg class="medium-jump" onclick="jumpto(<%= coordinates(@shipinfos) %>, 12)">
+        <li class="jump-button" title="medium" onclick="jumpto(<%= coordinates(@shipinfos) %>, 12)">
+          <svg class="medium-jump">
             <%= live_component @socket, Svg, image: "boat.svg" %>
           </svg>
         </li>
-        <li class="jump-button" title="close">
-          <svg class="close-jump" onclick="jumpto(<%= coordinates(@shipinfos) %>, 18)">
+        <li class="jump-button" title="close" onclick="jumpto(<%= coordinates(@shipinfos) %>, 18)">
+          <svg class="close-jump">
             <%= live_component @socket, Svg, image: "boat.svg" %>
           </svg>
         </li>
@@ -51,7 +51,7 @@ defmodule AisFrontWeb.Live.Component.ShipInfos.General do
     </article>
     <article id="shipinfos-description">
       <p>
-        <strong><%= ShipInfos.pretty_date!(@shipinfos) %></strong>, the vessel
+        <strong><%= Shipinfos.pretty_date!(@shipinfos) %></strong>, the vessel
         <%= if @shipinfos.name != "" do %>
           known as <strong><%= @shipinfos.name %></strong>
         <% end %>
@@ -61,17 +61,16 @@ defmodule AisFrontWeb.Live.Component.ShipInfos.General do
         <% end %>
         mmsi number <strong><%= @shipinfos.mmsi %></strong>
         was located at
-        <strong><%= ShipInfos.pretty_point!(@shipinfos, unit: :dms, compass?: true) %></strong>
+        <strong><%= Shipinfos.pretty_point!(@shipinfos, unit: :dms, compass?: true) %></strong>
         <%= if @shipinfos.sog > 0.5 do %>
-          sailing at <strong><%= ShipInfos.field_to_unit({:sog, @shipinfos.sog}) |> to_string %></strong>
+          sailing at <strong><%= Shipinfos.field_to_unit({:sog, @shipinfos.sog}) |> to_string %></strong>
         <% end %>
         <%= if @shipinfos.destination != "" do %>
-          towards <strong><%= ShipInfos.field_to_unit({:destination, @shipinfos.destination}) |> to_string %></strong>
+          towards <strong><%= Shipinfos.field_to_unit({:destination, @shipinfos.destination}) |> to_string %></strong>
         <% end %>
       </p>
     </article>
     <article id="shipinfos-dimensions">
-      <h4>Ship dimensions:</h4>
       <table>
         <tr>
           <td><%= ship_width(@shipinfos) %></td>

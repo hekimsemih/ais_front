@@ -1,11 +1,11 @@
-defmodule AisFrontWeb.Live.Component.ShipInfos do
+defmodule AisFrontWeb.Live.Component.Shipinfos do
   use Phoenix.LiveComponent
 
   alias AisFront.Core
-  alias AisFront.Core.ShipInfos
+  alias AisFront.Core.Shipinfos
 
   alias AisFrontWeb.Struct.Panel
-  alias AisFrontWeb.Live.Component.ShipInfos.None
+  alias AisFrontWeb.Live.Component.Shipinfos.None
 
   def mount(socket) do
     {
@@ -14,8 +14,8 @@ defmodule AisFrontWeb.Live.Component.ShipInfos do
         opened_details: MapSet.new(["general"]),
         widgets: %{
           analysis: %{summary: "Analysis", module: None},
-          general: %{summary: "General", module: AisFrontWeb.Live.Component.ShipInfos.General},
-          raw: %{summary: "Raw content", module: AisFrontWeb.Live.Component.ShipInfos.Raw}
+          general: %{summary: "General", module: AisFrontWeb.Live.Component.Shipinfos.General},
+          raw: %{summary: "Raw content", module: AisFrontWeb.Live.Component.Shipinfos.Raw}
         }
       )
     }
@@ -43,7 +43,7 @@ defmodule AisFrontWeb.Live.Component.ShipInfos do
   def render(%{shipinfos: _shipinfos} = assigns) do
     ~L"""
       <section class="panel-content" phx-hook="ChangeInfos">
-        <h3><%= ShipInfos.pretty_name!(@shipinfos) %></h3>
+        <h3><%= Shipinfos.pretty_name!(@shipinfos) %></h3>
         <%= for {k, v} <- @widgets do %>
         <details <%= open_details(Atom.to_string(k), @opened_details) %>>
           <summary phx-click="update_details_state" phx-value-details_name=<%= Atom.to_string(k) %> phx-target="#shipinfos > .panel-content">

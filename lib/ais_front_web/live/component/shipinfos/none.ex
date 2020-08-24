@@ -1,4 +1,4 @@
-defmodule AisFrontWeb.Live.Component.ShipInfos.None do
+defmodule AisFrontWeb.Live.Component.Shipinfos.None do
   use Phoenix.LiveComponent
   def render(assigns) do
     ~L"""

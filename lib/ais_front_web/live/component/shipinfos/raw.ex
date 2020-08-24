@@ -1,15 +1,15 @@
-defmodule AisFrontWeb.Live.Component.ShipInfos.Raw do
+defmodule AisFrontWeb.Live.Component.Shipinfos.Raw do
   use Phoenix.LiveComponent
 
   alias AisFront.Coordinates
-  alias AisFront.Core.ShipInfos
+  alias AisFront.Core.Shipinfos
 
   defp x_coord(point) do
-    {_y, x} = ShipInfos.field_to_unit(point) |> Coordinates.to_tuple_string
+    {_y, x} = Shipinfos.field_to_unit(point) |> Coordinates.to_tuple_string
     x
   end
   defp y_coord(point) do
-    {y, _x} = ShipInfos.field_to_unit(point) |> Coordinates.to_tuple_string
+    {y, _x} = Shipinfos.field_to_unit(point) |> Coordinates.to_tuple_string
     y
   end
   def render(%{shipinfos: _shipinfos} = assigns) do
@@ -33,11 +33,11 @@ defmodule AisFrontWeb.Live.Component.ShipInfos.Raw do
           <% _ -> %>
       <tr>
         <th>
-            <abbr title="<%= ShipInfos.field_meta(field) |> Map.get(:long_desc) %>">
-              <%= ShipInfos.field_meta(field) |> Map.get(:short_desc) %>
+            <abbr title="<%= Shipinfos.field_meta(field) |> Map.get(:long_desc) %>">
+              <%= Shipinfos.field_meta(field) |> Map.get(:short_desc) %>
             </abbr>
         </th>
-        <td><%= ShipInfos.field_to_unit(field) |> to_string %></td>
+        <td><%= Shipinfos.field_to_unit(field) |> to_string %></td>
       </tr>
         <% end %>
       <% end %>

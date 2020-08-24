@@ -1,4 +1,4 @@
-defmodule AisFront.Core.ShipInfos do
+defmodule AisFront.Core.Shipinfos do
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -34,6 +34,7 @@ defmodule AisFront.Core.ShipInfos do
     defp reduce_list([h|t], {:cont, acc}, fun), do: reduce_list(t, fun.(h, acc), fun)
   end
 
+  @derive {Phoenix.Param, key: :mmsi}
   @primary_key {:mmsi, :integer, autogenerate: false}
   schema "core_shipinfos" do
     field :callsign, :string
@@ -204,14 +205,14 @@ defmodule AisFront.Core.ShipInfos do
 
   ## Examples
 
-      iex> alias AisFront.Core.ShipInfos
-      iex> %ShipInfos{name: "alpha", callsign: "FE3G", mmsi: 1234} |> ShipInfos.pretty_name!
+      iex> alias AisFront.Core.Shipinfos
+      iex> %Shipinfos{name: "alpha", callsign: "FE3G", mmsi: 1234} |> Shipinfos.pretty_name!
       "alpha@FE3G (1234)"
-      iex> %ShipInfos{name: "", callsign: "FE3G", mmsi: 1234} |> ShipInfos.pretty_name!
+      iex> %Shipinfos{name: "", callsign: "FE3G", mmsi: 1234} |> Shipinfos.pretty_name!
       "@FE3G (1234)"
-      iex> %ShipInfos{name: "beta", callsign: "", mmsi: 1234} |> ShipInfos.pretty_name!
+      iex> %Shipinfos{name: "beta", callsign: "", mmsi: 1234} |> Shipinfos.pretty_name!
       "beta (1234)"
-      iex> %ShipInfos{name: "", callsign: "", mmsi: 1234} |> ShipInfos.pretty_name!
+      iex> %Shipinfos{name: "", callsign: "", mmsi: 1234} |> Shipinfos.pretty_name!
       "(1234)"
 
   """
@@ -227,14 +228,14 @@ defmodule AisFront.Core.ShipInfos do
   @doc """
   Return the date diff in a humanized format
 
-      iex> alias AisFront.Core.ShipInfos
-      iex> %ShipInfos{time: DateTime.add(DateTime.utc_now, 40, :second)} |> ShipInfos.pretty_date!
+      iex> alias AisFront.Core.Shipinfos
+      iex> %Shipinfos{time: DateTime.add(DateTime.utc_now, 40, :second)} |> Shipinfos.pretty_date!
       "in 40 seconds"
-      iex> %ShipInfos{time: DateTime.add(DateTime.utc_now, -40, :second)} |> ShipInfos.pretty_date!
+      iex> %Shipinfos{time: DateTime.add(DateTime.utc_now, -40, :second)} |> Shipinfos.pretty_date!
       "40 seconds ago"
-      iex> %ShipInfos{time: DateTime.add(DateTime.utc_now, 1, :second)} |> ShipInfos.pretty_date!
+      iex> %Shipinfos{time: DateTime.add(DateTime.utc_now, 1, :second)} |> Shipinfos.pretty_date!
       "now"
-      iex> %ShipInfos{time: DateTime.add(DateTime.utc_now, 100000, :second)} |> ShipInfos.pretty_date!
+      iex> %Shipinfos{time: DateTime.add(DateTime.utc_now, 100000, :second)} |> Shipinfos.pretty_date!
       "in 1 day and 3 hours"
 
   """
@@ -259,7 +260,7 @@ defmodule AisFront.Core.ShipInfos do
   Return a point in various formats dependending on srid unit type
   """
   def pretty_point!(shipinfos, opts \\ [])
-  def pretty_point!(%ShipInfos{point: %Point{} = point}, opts) do
+  def pretty_point!(%Shipinfos{point: %Point{} = point}, opts) do
     {x, y} = point
              |> Coordinates.from_point!
              |> Coordinates.to_tuple_string(opts)

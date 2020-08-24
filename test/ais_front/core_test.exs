@@ -5,7 +5,7 @@ defmodule AisFront.CoreTest do
   alias AisFront.RepoBack
 
   describe "core_shipinfos" do
-    alias AisFront.Core.ShipInfos
+    alias AisFront.Core.Shipinfos
 
     @valid_attrs %{callsign: "some callsign", cog: 120.5, destination: "some destination", dim_bow: 42, dim_port: 42, dim_starboard: 42, dim_stern: 42, draught: 120.5, eta: "2010-04-17T14:00:00Z", heading: 42, imo: 42, mmsi: 42, name: "some name", navstat: 42, pac: true, point: %Geo.Point{coordinates: {1,1}, srid: 4326}, rot: 42, ship_type: 42, sog: 120.5, time: "2010-04-17T14:00:00Z", valid_position: true}
     @update_attrs %{callsign: "some updated callsign", cog: 456.7, destination: "some updated destination", dim_bow: 43, dim_port: 43, dim_starboard: 43, dim_stern: 43, draught: 456.7, eta: "2011-05-18T15:01:01Z", heading: 43, imo: 43, mmsi: 43, name: "some updated name", navstat: 43, pac: false, point: %Geo.Point{coordinates: {2,2}, srid: 4326}, rot: 43, ship_type: 43, sog: 456.7, time: "2011-05-18T15:01:01Z", valid_position: false}
@@ -25,9 +25,9 @@ defmodule AisFront.CoreTest do
       :ok = Ecto.Adapters.SQL.Sandbox.checkout(RepoBack)
     end
 
-    test "list_core_shipinfos/0 returns all core_shipinfos" do
+    test "list_shipinfos/0 returns all core_shipinfos" do
       shipinfos = shipinfos_fixture()
-      assert Core.list_core_shipinfos() == [shipinfos]
+      assert Core.list_shipinfos() == [shipinfos]
     end
 
     test "get_shipinfos!/1 returns the shipinfos with given mmsi" do
@@ -36,7 +36,7 @@ defmodule AisFront.CoreTest do
     end
 
     test "create_shipinfos/1 with valid data creates a shipinfos" do
-      assert {:ok, %ShipInfos{} = shipinfos} = Core.create_shipinfos(@valid_attrs)
+      assert {:ok, %Shipinfos{} = shipinfos} = Core.create_shipinfos(@valid_attrs)
       assert shipinfos.callsign == "some callsign"
       assert shipinfos.cog == 120.5
       assert shipinfos.destination == "some destination"
@@ -65,7 +65,7 @@ defmodule AisFront.CoreTest do
 
     test "update_shipinfos/2 with valid data updates the shipinfos" do
       shipinfos = shipinfos_fixture()
-      assert {:ok, %ShipInfos{} = shipinfos} = Core.update_shipinfos(shipinfos, @update_attrs)
+      assert {:ok, %Shipinfos{} = shipinfos} = Core.update_shipinfos(shipinfos, @update_attrs)
       assert shipinfos.callsign == "some updated callsign"
       assert shipinfos.cog == 456.7
       assert shipinfos.destination == "some updated destination"
@@ -96,7 +96,7 @@ defmodule AisFront.CoreTest do
 
     test "delete_shipinfos/1 deletes the shipinfos" do
       shipinfos = shipinfos_fixture()
-      assert {:ok, %ShipInfos{}} = Core.delete_shipinfos(shipinfos)
+      assert {:ok, %Shipinfos{}} = Core.delete_shipinfos(shipinfos)
       assert_raise Ecto.NoResultsError, fn -> Core.get_shipinfos!(shipinfos.mmsi) end
     end
 

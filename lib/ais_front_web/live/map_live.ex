@@ -4,7 +4,7 @@ defmodule AisFrontWeb.MapLive do
   """
   use Phoenix.LiveView
 
-  alias AisFrontWeb.Live.Component.ShipInfos
+  alias AisFrontWeb.Live.Component.Shipinfos
   alias AisFrontWeb.Live.Component.Search
   alias AisFrontWeb.Live.Component.Svg
 
@@ -26,7 +26,7 @@ defmodule AisFrontWeb.MapLive do
           legends: %Panel{title: "Legends", icon: "cross.svg", module: Search},
           positions: %Panel{title: "Live positions", icon: "cross.svg", module: Search},
           search: %Panel{title: "Search", icon: "search.svg", module: Search},
-          shipinfos: %Panel{assigns: %{shipinfos: nil}, title: "Ship Infos", icon: "boat.svg", module: ShipInfos},
+          shipinfos: %Panel{assigns: %{shipinfos: nil}, title: "Ship Infos", icon: "boat.svg", module: Shipinfos},
           tools: %Panel{title: "Tools", icon: "cross.svg", module: Search}
         }
       )
