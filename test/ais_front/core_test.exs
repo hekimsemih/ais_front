@@ -105,4 +105,76 @@ defmodule AisFront.CoreTest do
       assert %Ecto.Changeset{} = Core.change_shipinfos(shipinfos)
     end
   end
+
+  describe "shiptypes" do
+    alias AisFront.Core.Shiptype
+
+    @valid_attrs %{details: "some details", name: "some name", short_name: "some short_name", summary: "some summary", type_id: 42}
+    @update_attrs %{details: "some updated details", name: "some updated name", short_name: "some updated short_name", summary: "some updated summary", type_id: 43}
+    @invalid_attrs %{details: nil, name: nil, short_name: nil, summary: nil, type_id: nil}
+
+    def shiptype_fixture(attrs \\ %{}) do
+      {:ok, shiptype} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Core.create_shiptype()
+
+      shiptype
+    end
+
+    setup do
+      # Explicitly get a connection before each test
+      :ok = Ecto.Adapters.SQL.Sandbox.checkout(RepoBack)
+    end
+
+    test "list_shiptypes/0 returns all shiptypes" do
+      shiptype = shiptype_fixture()
+      assert Core.list_shiptypes() == [shiptype]
+    end
+
+    test "get_shiptype!/1 returns the shiptype with given type_id" do
+      shiptype = shiptype_fixture()
+      assert Core.get_shiptype!(shiptype.type_id) == shiptype
+    end
+
+    test "create_shiptype/1 with valid data creates a shiptype" do
+      assert {:ok, %Shiptype{} = shiptype} = Core.create_shiptype(@valid_attrs)
+      assert shiptype.details == "some details"
+      assert shiptype.name == "some name"
+      assert shiptype.short_name == "some short_name"
+      assert shiptype.summary == "some summary"
+      assert shiptype.type_id == 42
+    end
+
+    test "create_shiptype/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Core.create_shiptype(@invalid_attrs)
+    end
+
+    test "update_shiptype/2 with valid data updates the shiptype" do
+      shiptype = shiptype_fixture()
+      assert {:ok, %Shiptype{} = shiptype} = Core.update_shiptype(shiptype, @update_attrs)
+      assert shiptype.details == "some updated details"
+      assert shiptype.name == "some updated name"
+      assert shiptype.short_name == "some updated short_name"
+      assert shiptype.summary == "some updated summary"
+      assert shiptype.type_id == 43
+    end
+
+    test "update_shiptype/2 with invalid data returns error changeset" do
+      shiptype = shiptype_fixture()
+      assert {:error, %Ecto.Changeset{}} = Core.update_shiptype(shiptype, @invalid_attrs)
+      assert shiptype == Core.get_shiptype!(shiptype.type_id)
+    end
+
+    test "delete_shiptype/1 deletes the shiptype" do
+      shiptype = shiptype_fixture()
+      assert {:ok, %Shiptype{}} = Core.delete_shiptype(shiptype)
+      assert_raise Ecto.NoResultsError, fn -> Core.get_shiptype!(shiptype.type_id) end
+    end
+
+    test "change_shiptype/1 returns a shiptype changeset" do
+      shiptype = shiptype_fixture()
+      assert %Ecto.Changeset{} = Core.change_shiptype(shiptype)
+    end
+  end
 end
