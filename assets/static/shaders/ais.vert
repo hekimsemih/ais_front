@@ -14,11 +14,13 @@ attribute float a_size;
 attribute float a_iscircle;
 attribute float a_id;
 attribute float a_angle;
+attribute float a_color;
 
 varying vec2 v_texCoord;
 varying float v_size;
 varying float v_iscircle;
 varying float v_id;
+varying float v_color;
 
 void main(void) {
   mat4 offsetMatrix = u_offsetScaleMatrix;
@@ -53,4 +55,5 @@ void main(void) {
   v_size = size;
   v_iscircle = a_iscircle;
   v_id = a_id;
+  v_color = a_color;
 }

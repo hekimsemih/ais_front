@@ -7,6 +7,7 @@ varying vec2 v_texCoord;
 varying float v_size;
 varying float v_iscircle;
 varying float v_id;
+varying float v_color;
 
 vec2 poly[MAX_NUM_VERTICES];
 float segLen[MAX_NUM_VERTICES];
@@ -16,6 +17,25 @@ const int n = 5;
 float strokefactor = 3.;
 
 vec4 outsidecolor = vec4(0.);
+
+// floatToVec4(): convert a float to a vec4
+//      attrs - f: a float
+//      return: the resulting vec4 extracted from a float
+//vec4 floatToVec4(float f) {
+//    float r = f >> 16;
+//    float g = f >> 8;
+//    float b = f >> 0;
+//    return vec4(r, g, b, 1.0);
+//}
+
+vec3 unpackColor(float f)
+{
+    vec3 color;
+    color.r = floor(f / 65536.0);
+    color.g = floor((f - color.r * 65536.0) / 256.0);
+    color.b = floor(f - color.r * 65536.0 - color.g * 256.0);
+    return color / 256.0;
+}
 
 float isLeft(vec2 p, vec2 v0, vec2 v1) {
     return ((v1.x - v0.x) * (p.y - v0.y)
@@ -181,14 +201,14 @@ vec4 getPolygon(vec2 p,
 
 void main(void) {
     vec2 texCoord = v_texCoord * 2.0 - vec2(1.0, 1.0);
-    vec4 symbolcolor = vec4(vec3(1.), 1.);
+    vec4 symbolcolor = vec4(unpackColor(v_color), 1.0);
     vec4 strokecolor = symbolcolor;
     strokecolor.rgb *= 0.2;
     vec2 strokepattern =  vec2(2.,0.)/strokefactor;
     vec4 color = outsidecolor;
 
     if (v_id == u_selectedId){
-        strokecolor = vec4(1.,0.,0.,1.);
+        strokecolor = vec4(0.7,0.7,0.7,1.);
         strokefactor += 2.;
     }
     float strokesize = strokefactor * 2. * (1./v_size);

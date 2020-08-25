@@ -52,8 +52,9 @@ const map = new Map({
 
 const webglSource = new VectorSource({
     format: new GeoJSON(),
-    url: 'http://192.168.8.157:8600/geoserver/ais/wms?service=WMS&version=1.1.1&request=GetMap&layers=ais%3Ashipinfos&bbox=-180.0%2C-90.0%2C180.0%2C90.0&width=768&height=384&srs=EPSG%3A4326&format=geojson&time=PT5M/PRESENT',
-    url: 'data/geojson/ais.json',
+    // url: 'http://192.168.8.157:8600/geoserver/ais/wms?service=WMS&version=1.1.1&request=GetMap&layers=ais%3Ashipinfos&bbox=-180.0%2C-90.0%2C180.0%2C90.0&width=768&height=384&srs=EPSG%3A4326&format=geojson&time=PT5M/PRESENT',
+    // url: 'data/geojson/ais.json',
+    url: 'http://localhost:4000/api/ships?view=large_map',
     crossOrigin: 'anonymous',
 });
 
@@ -110,6 +111,38 @@ lvs.hooks.ChangeInfos = {
 //-->
 //<-- Webgl attributes
 // We need size, angle, color, shape to properly draw a ship
+const color_dict = {
+    special: "#FF00E0",
+    cargo: "#FF8700",
+    wing: "#00FFC3",
+    sailing: "#00C4FF",
+    unspecified: "#969696",
+    highspeed: "#CE00FF",
+    pleasure: "#00FF25",
+    fishing: "#0002FF",
+    tanker: "#D6DD1C",
+    tug: "#ECA02C",
+    sar: "#FF001D",
+    other: "#E0E0E0",
+    passenger: "#5FB445"
+}
+function color_to_int(color){
+    const [r,g,b] = [
+        color.slice(1,3),
+        color.slice(3,5),
+        color.slice(5,7)
+    ].map(x => parseInt(x,16));
+    let res = 0;
+    res |= r << 16;
+    res |= g << 8;
+    res |= b << 0;
+    return res;
+}
+
+for (let key in color_dict){
+    console.log(color_to_int(color_dict[key]).toString(2));
+}
+
 const customLayerAttributes = [{
     name: 'size',
     callback: function (feature) {
@@ -120,8 +153,9 @@ const customLayerAttributes = [{
     name: 'iscircle',
     callback: function (feature) {
         const sog = feature.get('sog');
+        const heading = feature.get('heading');
 
-        if (sog < 0.5)
+        if (sog < 0.5 || heading == 511)
             return true;
         return false;
     },
@@ -131,15 +165,23 @@ const customLayerAttributes = [{
     callback: function (feature) {
         const b = new ArrayBuffer(Float32Array.BYTES_PER_ELEMENT);
         const dv = new DataView(b,0);
-        dv.setInt32(0, parseInt(feature.getId().split('.')[1]));
+        dv.setInt32(0, parseInt(feature.getId()));
         return dv.getFloat32(0);
     },
     toFragment: true,
 },{
     name: 'angle',
     callback: function (feature) {
-        return feature.get('cog')*Math.PI/180;
+        return feature.get('heading')*Math.PI/180;
     }
+},{
+    name: 'color',
+    callback: function (feature) {
+        const type = feature.get('type');
+        const color = color_dict[type];
+        return color_to_int(color);
+    },
+    toFragment: true,
 }
 ];
 const customLayerAttributeArrays = [];
@@ -275,7 +317,7 @@ function loadMap(){
         //<-- map events
         map.on('click', function(evt) {
             map.forEachFeatureAtPixel(evt.pixel, function(feature) {
-                const featureId = feature.getId().split('.')[1];
+                const featureId = feature.getId();
                 shipinfos.dispatchEvent(changeinfosEvent({mmsi: featureId}));
                 panels.dispatchEvent(showpanelEvent({panel_id: "shipinfos"}));
                 return true;
@@ -288,7 +330,7 @@ function loadMap(){
         map.on('pointermove', function(evt) {
             hoveredFeature.setInt32(0,-1);
             map.forEachFeatureAtPixel(evt.pixel, function(feature) {
-                hoveredFeature.setInt32(0, parseInt(feature.getId().split('.')[1]));
+                hoveredFeature.setInt32(0, parseInt(feature.getId()));
 
                 // if (!isShowInfos) return false;
 
