@@ -6,18 +6,15 @@ defmodule AisFrontWeb.ShipinfosController do
 
   action_fallback AisFrontWeb.FallbackController
 
-  defp shipinfos_view(view) do
-    case view do
-      "full" -> Core.list_shipinfos_full
-      "large_map" -> Core.list_shipinfos_large_map
-    end
-  end
-
+  @index_shipinfos_view %{
+    "full" => &Core.list_shipinfos_full/0,
+    "large_map" => &Core.list_shipinfos_large_map/0
+  }
   def index(conn, %{"format" => format, "view" => view}) do
     render(
       conn,
       "#{view}_index.#{format}",
-      shipinfos: shipinfos_view(view)
+      shipinfos: @index_shipinfos_view[view].()
     )
   end
   def index(conn, params) do
@@ -25,11 +22,15 @@ defmodule AisFrontWeb.ShipinfosController do
     index(conn, params)
   end
 
+  @show_shipinfos_view %{
+    "full" => &Core.get_shipinfos_full/1,
+    "large_map" => &Core.get_shipinfos_large_map/1
+  }
   def show(conn, %{"id" => id, "format" => format, "view" => view}) do
     render(
       conn,
       "#{view}_show.#{format}",
-      shipinfos: shipinfos_view(view)
+      shipinfos: @show_shipinfos_view[view].(id)
     )
   end
   def show(conn, params) do

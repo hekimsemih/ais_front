@@ -4,16 +4,16 @@ defmodule AisFrontWeb.ShipinfosView do
 
   alias AisFront.Core.Shipinfos
 
-  defp render_view("index.json", %{shipinfos: shipinfos}, view) do
-    tf = Enum.count(shipinfos)
+  defp render_view("index.json", %{shipinfos: shipinfos_list}, view) do
+    tf = Enum.count(shipinfos_list)
     %{
       type: "FeatureCollection",
       totalFeatures: tf,
-      features: render_many(shipinfos, ShipinfosView, view)
+      features: render_many(shipinfos_list, ShipinfosView, view)
     }
   end
-  defp render_view("show.json", %{shipinfos: shipinfos}) do
-    %{data: render_one(shipinfos, ShipinfosView, "shipinfos.json")}
+  defp render_view("show.json", %{shipinfos: shipinfos}, view) do
+    render_one(shipinfos, ShipinfosView, view)
   end
 
   defp shipinfos_description(shipinfos) do

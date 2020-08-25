@@ -120,6 +120,77 @@ defmodule AisFront.Core do
   def get_shipinfos!(mmsi), do: Repo.get!(Shipinfos, mmsi)
 
   @doc """
+  Gets a single shipinfos
+
+  Returns nil if the Ship does not exist
+
+  #Examples
+
+      iex> get_shipinfos(123)
+      %Shipinfos{}
+
+      iex> get_shipinfos(456)
+      nil
+
+  """
+  def get_shipinfos(mmsi), do: Repo.get(Shipinfos, mmsi)
+
+  def get_shipinfos_full(mmsi) do
+    query_full()
+    |> where([si, st], si.mmsi == ^mmsi)
+    |> select([si, st], %{
+      mmsi: si.mmsi,
+      callsign: si.callsign,
+      cog: si.cog,
+      destination: si.destination,
+      dim_bow: si.dim_bow,
+      dim_port: si.dim_port,
+      dim_starboard: si.dim_starboard,
+      dim_stern: si.dim_stern,
+      draught: si.draught,
+      eta: si.eta,
+      heading: si.heading,
+      imo: si.imo,
+      name: si.name,
+      navstat: si.navstat,
+      pac: si.pac,
+      point: si.point,
+      rot: si.rot,
+      ship_type: si.ship_type,
+      sog: si.sog,
+      time: si.time,
+      valid_position: si.valid_position,
+
+      type_short_name: st.short_name,
+      type_name: st.name,
+      type_summary: st.summary,
+      type_details: st.details
+    })
+    |> Repo.one
+  end
+
+  def get_shipinfos_large_map(mmsi) do
+    query_full()
+    |> where([si, st], si.mmsi == ^mmsi)
+    |> select(
+      [si, st],
+      %{
+        mmsi: si.mmsi,
+        time: si.time,
+        point: si.point,
+        callsign: si.callsign,
+        name: si.name,
+        sog: si.sog,
+        cog: si.cog,
+        heading: si.heading,
+
+        type: st.short_name
+      }
+    )
+    |> Repo.one
+  end
+  @doc """
+  ** OBSOLETE **
   Gets a single shipinfos with its associated type.
 
   Raises `Ecto.NoResultsError` if the Ship infos does not exist.
@@ -135,24 +206,9 @@ defmodule AisFront.Core do
   """
   def get_shipinfos_with_type!(mmsi) do
     query = from(si in Shipinfos, join: st in Shiptype, on: st.type_id == si.ship_type, select: {si, st}, where: si.mmsi == ^mmsi, where: si.valid_position == true)
-    query |> Repo.all
+    query |> Repo.one
   end
 
-  @doc """
-  Gets a single shipinfos
-
-  Returns nil if the Ship does not exist
-
-  #Examples
-
-      iex> get_shipinfos(123)
-      %Shipinfos{}
-
-      iex> get_shipinfos(456)
-      nil
-
-  """
-  def get_shipinfos(mmsi), do: Repo.get(Shipinfos, mmsi)
 
   @doc """
   Creates a shipinfos.
