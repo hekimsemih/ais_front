@@ -6,29 +6,36 @@ defmodule AisFrontWeb.ShipinfosController do
 
   action_fallback AisFrontWeb.FallbackController
 
-  def index(conn, %{"format" => format, "view" => view}) do
-    shipinfos = case view do
-      "full" -> Core.list_shipinfos_with_type
+  defp shipinfos_view(view) do
+    case view do
+      "full" -> Core.list_shipinfos_full
+      "large_map" -> Core.list_shipinfos_large_map
     end
+  end
+
+  def index(conn, %{"format" => format, "view" => view}) do
     render(
       conn,
       "#{view}_index.#{format}",
-      shipinfos: shipinfos,
+      shipinfos: shipinfos_view(view)
     )
   end
-  def index(conn, %{}), do: index(conn, %{"format" => "json", "view" => "full"})
+  def index(conn, params) do
+    params = Map.merge(%{"format" => "json", "view" => "full"}, params)
+    index(conn, params)
+  end
 
   def show(conn, %{"id" => id, "format" => format, "view" => view}) do
-    shipinfos = case view do
-      "full" -> Core.list_shipinfos_with_type
-    end
     render(
       conn,
       "#{view}_show.#{format}",
-      shipinfos: shipinfos
+      shipinfos: shipinfos_view(view)
     )
   end
-  def show(conn, %{"id" => id}), do: index(conn, %{"format" => "json", "view" => "full"})
+  def show(conn, params) do
+    params = Map.merge(%{"format" => "json", "view" => "full"}, params)
+    show(conn, params)
+  end
 
   # def create(conn, %{"shipinfos" => shipinfos_params}) do
   #   with {:ok, %Shipinfos{} = shipinfos} <- Core.create_shipinfos(shipinfos_params) do

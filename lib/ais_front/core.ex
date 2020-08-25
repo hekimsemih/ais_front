@@ -22,18 +22,85 @@ defmodule AisFront.Core do
     Repo.all(Shipinfos)
   end
 
+  defp query_full do
+    from(
+      si in Shipinfos,
+      join: st in Shiptype,
+      on: st.type_id == si.ship_type,
+      where: si.valid_position == true
+      )
+  end
   @doc """
-  Returns the list of core_shipinfos with the associated type.
+  Returns the list of core_shipinfos with the full informations.
 
   ## Examples
 
-      iex> list_shipinfos_with_type()
+      iex> list_shipinfos_full()
       [{%Shipinfos{}, %Shiptype{}}, ...]
 
   """
-  def list_shipinfos_with_type do
-    query = from(si in Shipinfos, join: st in Shiptype, on: st.type_id == si.ship_type, select: {si, st}), where: si.valid_position == true
-    query |> Repo.all
+  def list_shipinfos_full do
+    query_full()
+    |> select([si, st], %{
+      mmsi: si.mmsi,
+      callsign: si.callsign,
+      cog: si.cog,
+      destination: si.destination,
+      dim_bow: si.dim_bow,
+      dim_port: si.dim_port,
+      dim_starboard: si.dim_starboard,
+      dim_stern: si.dim_stern,
+      draught: si.draught,
+      eta: si.eta,
+      heading: si.heading,
+      imo: si.imo,
+      name: si.name,
+      navstat: si.navstat,
+      pac: si.pac,
+      point: si.point,
+      rot: si.rot,
+      ship_type: si.ship_type,
+      sog: si.sog,
+      time: si.time,
+      valid_position: si.valid_position,
+
+      type_short_name: st.short_name,
+      type_name: st.name,
+      type_summary: st.summary,
+      type_details: st.details
+    })
+    |> Repo.all
+    # |> Enum.map(fn infos ->
+    #   Enum.reduce(infos, %{}, fn val, acc ->
+    #     val
+    #     |> Map.to_list
+    #     |> Enum.filter(fn {k, _v} ->
+    #       k not in [:__struct__, :__meta__]
+    #     end)
+    #     |> Enum.into(acc)
+    #   end)
+    # end)
+  end
+
+  def list_shipinfos_large_map do
+    query_full()
+    |> select(
+      [si, st],
+      %{
+        mmsi: si.mmsi,
+        time: si.time,
+        point: si.point,
+        callsign: si.callsign,
+        name: si.name,
+        sog: si.sog,
+        cog: si.cog,
+        heading: si.heading,
+
+        type: st.short_name
+      }
+    )
+    |> limit(1000)
+    |> Repo.all
   end
 
   @doc """
