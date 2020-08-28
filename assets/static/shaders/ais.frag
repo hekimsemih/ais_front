@@ -203,15 +203,15 @@ void main(void) {
     vec2 texCoord = v_texCoord * 2.0 - vec2(1.0, 1.0);
     vec4 symbolcolor = vec4(unpackColor(v_color), 1.0);
     vec4 strokecolor = symbolcolor;
-    strokecolor.rgb *= 0.2;
     vec2 strokepattern =  vec2(2.,0.)/strokefactor;
     vec4 color = outsidecolor;
 
     if (v_id == u_selectedId){
-        strokecolor = vec4(0.7,0.7,0.7,1.);
-        strokefactor += 2.;
+        symbolcolor.rgb += 0.5;
+        //strokefactor += 2.;
     }
     float strokesize = strokefactor * 2. * (1./v_size);
+    strokecolor.rgb *= 0.2;
 
     if (v_iscircle == 1.){
         color = getCircle(texCoord,
