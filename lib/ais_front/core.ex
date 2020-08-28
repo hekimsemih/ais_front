@@ -189,26 +189,6 @@ defmodule AisFront.Core do
     )
     |> Repo.one
   end
-  @doc """
-  ** OBSOLETE **
-  Gets a single shipinfos with its associated type.
-
-  Raises `Ecto.NoResultsError` if the Ship infos does not exist.
-
-  ## Examples
-
-      iex> get_shipinfos!(123)
-      {%Shipinfos{}, %Shiptype{}}
-
-      iex> get_shipinfos!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_shipinfos_with_type!(mmsi) do
-    query = from(si in Shipinfos, join: st in Shiptype, on: st.type_id == si.ship_type, select: {si, st}, where: si.mmsi == ^mmsi, where: si.valid_position == true)
-    query |> Repo.one
-  end
-
 
   @doc """
   Creates a shipinfos.
