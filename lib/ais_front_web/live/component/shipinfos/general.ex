@@ -52,6 +52,9 @@ defmodule AisFrontWeb.Live.Component.Shipinfos.General do
     <article id="shipinfos-description">
       <p>
         <strong><%= FullShipinfos.pretty_date!(@shipinfos) %></strong>, the vessel
+        <%= if @shipinfos.type_summary not in ["reserved", "unspecified", "other"] do %>
+          of type <strong><%= @shipinfos.type_summary %></strong>
+        <% end %>
         <%= if @shipinfos.name != "" do %>
           known as <strong><%= @shipinfos.name %></strong>
         <% end %>

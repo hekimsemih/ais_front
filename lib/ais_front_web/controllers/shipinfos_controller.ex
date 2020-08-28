@@ -2,7 +2,6 @@ defmodule AisFrontWeb.ShipinfosController do
   use AisFrontWeb, :controller
 
   alias AisFront.Core
-  alias AisFront.Core.Shipinfos
 
   action_fallback AisFrontWeb.FallbackController
 
