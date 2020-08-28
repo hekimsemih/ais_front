@@ -1,7 +1,7 @@
 defmodule AisFrontWeb.Live.Component.Shipinfos.General do
   use Phoenix.LiveComponent
 
-  alias AisFront.Core.Shipinfos
+  alias AisFront.Core.FullShipinfos
   alias AisFrontWeb.Live.Component.Svg
   alias AisFront.Units.Distance
 
@@ -51,7 +51,7 @@ defmodule AisFrontWeb.Live.Component.Shipinfos.General do
     </article>
     <article id="shipinfos-description">
       <p>
-        <strong><%= Shipinfos.pretty_date!(@shipinfos) %></strong>, the vessel
+        <strong><%= FullShipinfos.pretty_date!(@shipinfos) %></strong>, the vessel
         <%= if @shipinfos.name != "" do %>
           known as <strong><%= @shipinfos.name %></strong>
         <% end %>
@@ -61,12 +61,12 @@ defmodule AisFrontWeb.Live.Component.Shipinfos.General do
         <% end %>
         mmsi number <strong><%= @shipinfos.mmsi %></strong>
         was located at
-        <strong><%= Shipinfos.pretty_point!(@shipinfos, unit: :dms, compass?: true) %></strong>
+        <strong><%= FullShipinfos.pretty_point!(@shipinfos, unit: :dms, compass?: true) %></strong>
         <%= if @shipinfos.sog > 0.5 do %>
-          sailing at <strong><%= Shipinfos.field_to_unit({:sog, @shipinfos.sog}) |> to_string %></strong>
+          sailing at <strong><%= FullShipinfos.field_to_unit({:sog, @shipinfos.sog}) |> to_string %></strong>
         <% end %>
         <%= if @shipinfos.destination != "" do %>
-          towards <strong><%= Shipinfos.field_to_unit({:destination, @shipinfos.destination}) |> to_string %></strong>
+          towards <strong><%= FullShipinfos.field_to_unit({:destination, @shipinfos.destination}) |> to_string %></strong>
         <% end %>
       </p>
     </article>

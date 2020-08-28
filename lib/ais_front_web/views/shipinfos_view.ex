@@ -2,7 +2,7 @@ defmodule AisFrontWeb.ShipinfosView do
   use AisFrontWeb, :view
   alias AisFrontWeb.ShipinfosView
 
-  alias AisFront.Core.Shipinfos
+  alias AisFront.Core.FullShipinfos
 
   defp render_view("index.json", %{shipinfos: shipinfos_list}, view) do
     tf = Enum.count(shipinfos_list)
@@ -17,7 +17,7 @@ defmodule AisFrontWeb.ShipinfosView do
   end
 
   defp shipinfos_description(shipinfos) do
-    "#{Shipinfos.pretty_name!(shipinfos)}, #{Shipinfos.pretty_date!(shipinfos)}"
+    "#{FullShipinfos.pretty_name!(shipinfos)}\n#{FullShipinfos.pretty_date!(shipinfos)}"
   end
   defp shipinfos_heading_or_cog(shipinfos) do
     cond do

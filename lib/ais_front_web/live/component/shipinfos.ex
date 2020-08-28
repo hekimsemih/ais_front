@@ -2,7 +2,7 @@ defmodule AisFrontWeb.Live.Component.Shipinfos do
   use Phoenix.LiveComponent
 
   alias AisFront.Core
-  alias AisFront.Core.Shipinfos
+  alias AisFront.Core.FullShipinfos
 
   alias AisFrontWeb.Struct.Panel
   alias AisFrontWeb.Live.Component.Shipinfos.None
@@ -43,7 +43,7 @@ defmodule AisFrontWeb.Live.Component.Shipinfos do
   def render(%{shipinfos: _shipinfos} = assigns) do
     ~L"""
       <section class="panel-content" phx-hook="ChangeInfos">
-        <h3><%= Shipinfos.pretty_name!(@shipinfos) %></h3>
+        <h3><%= FullShipinfos.pretty_name!(@shipinfos) %></h3>
         <%= for {k, v} <- @widgets do %>
         <details <%= open_details(Atom.to_string(k), @opened_details) %>>
           <summary phx-click="update_details_state" phx-value-details_name=<%= Atom.to_string(k) %> phx-target="#shipinfos > .panel-content">

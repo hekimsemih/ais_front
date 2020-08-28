@@ -2,14 +2,14 @@ defmodule AisFrontWeb.Live.Component.Shipinfos.Raw do
   use Phoenix.LiveComponent
 
   alias AisFront.Coordinates
-  alias AisFront.Core.Shipinfos
+  alias AisFront.Core.FullShipinfos
 
   defp x_coord(point) do
-    {_y, x} = Shipinfos.field_to_unit(point) |> Coordinates.to_tuple_string
+    {_y, x} = FullShipinfos.field_to_unit(point) |> Coordinates.to_tuple_string
     x
   end
   defp y_coord(point) do
-    {y, _x} = Shipinfos.field_to_unit(point) |> Coordinates.to_tuple_string
+    {y, _x} = FullShipinfos.field_to_unit(point) |> Coordinates.to_tuple_string
     y
   end
   def render(%{shipinfos: _shipinfos} = assigns) do
@@ -33,11 +33,11 @@ defmodule AisFrontWeb.Live.Component.Shipinfos.Raw do
           <% _ -> %>
       <tr>
         <th>
-            <abbr title="<%= Shipinfos.field_meta(field) |> Map.get(:long_desc) %>">
-              <%= Shipinfos.field_meta(field) |> Map.get(:short_desc) %>
+            <abbr title="<%= FullShipinfos.field_meta(field) |> Map.get(:long_desc) %>">
+              <%= FullShipinfos.field_meta(field) |> Map.get(:short_desc) %>
             </abbr>
         </th>
-        <td><%= Shipinfos.field_to_unit(field) |> to_string %></td>
+        <td><%= FullShipinfos.field_to_unit(field) |> to_string %></td>
       </tr>
         <% end %>
       <% end %>
