@@ -12,7 +12,8 @@ import GeoJSON from 'ol/format/GeoJSON';
 import Renderer from 'ol/renderer/webgl/PointsLayer';
 
 import {defaults as defaultInteractions, DragRotateAndZoom} from 'ol/interaction';
-import {RegularShape, Fill, Style, Stroke} from 'ol/style';
+import {RegularShape, Fill, Style, Stroke, Text} from 'ol/style';
+import Point from 'ol/geom/Point';
 
 import MousePosition from 'ol/control/MousePosition';
 import {defaults as defaultControls} from 'ol/control';
@@ -30,6 +31,36 @@ const mousePositionControl = new MousePosition({
     className: 'custom-mouse-position',
     target: document.getElementById('mouse-position'),
     undefinedHTML: '&nbsp;'
+});
+
+const shipLabelText = new Text({
+    text: "None",
+    textAlign: 'center',
+    textBaseline: 'middle',
+    offsetY: 30,
+    backgroundFill: new Fill({
+        color: [255, 255, 255]
+    }),
+    backgroundStroke: new Stroke({
+        width: 1
+    }),
+    padding: [5,5,5,5]
+});
+window.shipStyle = shipLabelText
+const shipLabelPoint = new Point(fromLonLat([0,0]));
+const shipLabel = new Feature({
+    geometry: shipLabelPoint,
+    name: 'ship label',
+});
+shipLabel.setStyle(
+    new Style({
+        text: shipLabelText
+    })
+);
+const shipLabelLayer = new VectorLayer({
+    source: new VectorSource({
+        features: [shipLabel]
+    })
 });
 
 const view = new View({
@@ -97,7 +128,6 @@ lvs.hooks.PanelVisibility = {
     }
 };
 const changeinfosEvent = (detail) => { return new CustomEvent("changeinfos", {detail: detail}) };
-window.changeinfosEvent = changeinfosEvent;
 let shipinfos = null;
 lvs.hooks.ChangeInfos = {
     mounted(){
@@ -137,10 +167,6 @@ function color_to_int(color){
     res |= g << 8;
     res |= b << 0;
     return res;
-}
-
-for (let key in color_dict){
-    console.log(color_to_int(color_dict[key]).toString(2));
 }
 
 const customLayerAttributes = [{
@@ -312,6 +338,7 @@ function loadMap(){
         // map.addLayer(osmLayer);
         map.addLayer(stamenLayer);
         map.addLayer(webglLayer);
+        map.addLayer(shipLabelLayer);
         map.setTarget("map");
 
         //<-- map events
@@ -329,8 +356,12 @@ function loadMap(){
         });
         map.on('pointermove', function(evt) {
             hoveredFeature.setInt32(0,-1);
+            shipLabelLayer.setVisible(false);
             map.forEachFeatureAtPixel(evt.pixel, function(feature) {
                 hoveredFeature.setInt32(0, parseInt(feature.getId()));
+                shipLabelPoint.setCoordinates(feature.getGeometry().getCoordinates());
+                shipLabelText.setText(feature.get('description'));
+                shipLabelLayer.setVisible(true);
 
                 // if (!isShowInfos) return false;
 
