@@ -59,7 +59,7 @@ defmodule AisFrontWeb.Live.Component.Shipinfos do
   end
 
   def handle_event("changeinfos", %{"mmsi" => mmsi}, socket) do
-    shipinfos = Core.get_shipinfos(mmsi)
+    shipinfos = Core.get_shipinfos_full(mmsi)
     send(self(), {:updatepanel, %{panel_id: :shipinfos, changes: %Panel{assigns: %{shipinfos: shipinfos}}}})
     {:noreply, assign(socket, shipinfos: shipinfos)}
   end
