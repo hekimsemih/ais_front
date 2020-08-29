@@ -6,6 +6,9 @@ $grey-dark: #444
 $grey-darkest: #111
 $blue: #66f
 
+.hide
+  display: none
+
 html
   font-family: Roboto, sans-serif
   font-size: 62.5%
@@ -232,6 +235,31 @@ body
             .close-jump
               width: 2.6em
               height: 2.6em
+        #search-ship-results
+          background-color: white
+          border: 1px solid $grey
+          border-radius: 0.5em
+          padding: 0.5em
+          table
+            margin: 0
+          tr.ship-result
+            height: 3em
+            cursor: pointer
+            &:hover
+              background-color: $white
+            td.ship-result-icon
+              border-right: 1px solid $white
+              width: 3em
+              svg
+                width: 3em
+                height: 3em
+            td.ship-result-data
+              padding-left: 0.5em
+            table
+              th
+                text-align: left
+              td
+                text-align: right
 
 
     .panel.in
