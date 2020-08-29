@@ -46,7 +46,6 @@ const shipLabelText = new Text({
     }),
     padding: [5,5,5,5]
 });
-window.shipStyle = shipLabelText
 const shipLabelPoint = new Point(fromLonLat([0,0]));
 const shipLabel = new Feature({
     geometry: shipLabelPoint,
@@ -85,13 +84,63 @@ const webglSource = new VectorSource({
     format: new GeoJSON(),
     // url: 'http://192.168.8.157:8600/geoserver/ais/wms?service=WMS&version=1.1.1&request=GetMap&layers=ais%3Ashipinfos&bbox=-180.0%2C-90.0%2C180.0%2C90.0&width=768&height=384&srs=EPSG%3A4326&format=geojson&time=PT5M/PRESENT',
     // url: 'data/geojson/ais.json',
-    url: 'http://localhost:4000/api/ships?view=large_map',
+    url: 'http://192.168.8.181:4000/api/ships?view=large_map',
     crossOrigin: 'anonymous',
 });
 
-const focusArrayBuffer = new ArrayBuffer(Float32Array.BYTES_PER_ELEMENT);
-const hoveredFeature = new DataView(focusArrayBuffer);
+const hoveredArrayBuffer = new ArrayBuffer(Float32Array.BYTES_PER_ELEMENT);
+const hoveredFeature = new DataView(hoveredArrayBuffer);
 hoveredFeature.setInt32(0,-1);
+
+const selectedArrayBuffer = new ArrayBuffer(Float32Array.BYTES_PER_ELEMENT);
+const selectedFeature = new DataView(selectedArrayBuffer);
+selectedFeature.setInt32(0,-1);
+let selectedMmsi = -1;
+//-->
+//<-- Functions
+
+function highlightShip(mmsi){
+    selectedFeature.setInt32(0, mmsi);
+    selectedMmsi = mmsi;
+}
+
+function showShip(mmsi){
+    shipinfos.dispatchEvent(changeinfosEvent({mmsi: mmsi}));
+    panels.dispatchEvent(showpanelEvent({panel_id: "shipinfos"}));
+    highlightShip(mmsi);
+}
+
+function jumpto(coordinates, zoom){
+    let position = fromLonLat(coordinates)
+    if (zoom)
+        view.animate({zoom: zoom, center: position});
+    else
+        view.animate({center: position});
+}
+
+function debouncedJumpto(coordinates, zoom){
+    if (debouncedTimeout) clearTimeout(debouncedTimeout);
+    debouncedTimeout = setTimeout(function(){jumpto(coordinates, zoom)}, 200);
+}
+
+let oldCoordinates = [0,0];
+let oldMmsi = -1;
+function overSearchResult(coordinates, mmsi){
+    oldMmsi = selectedMmsi;
+    oldCoordinates = view.getCenter();
+    highlightShip(mmsi);
+    jumpto(coordinates);
+}
+let debouncedTimeout = null;
+function debouncedOverSearchResult(coordinates, mmsi) {
+    if (debouncedTimeout) clearTimeout(debouncedTimeout);
+    debouncedTimeout = setTimeout(function(){overSearchResult(coordinates, mmsi)}, 200);
+}
+function outSearchResult(){
+    highlightShip(oldMmsi);
+    jumpto(oldCoordinates);
+}
+
 //-->
 //<--Liveview hooks
 const lvs = window.liveSocket;
@@ -231,8 +280,11 @@ function numTwoFloats(num){
     return [firstFloat, secondFloat];
 }
 const uniforms = {
-    u_selectedId: function(framestate){
+    u_hoveredId: function(framestate){
         return hoveredFeature.getFloat32(0);
+    },
+    u_selectedId: function(framestate){
+        return selectedFeature.getFloat32(0);
     },
     u_eyepos: function(framestate){
         const center = framestate.viewState.center;
@@ -344,9 +396,9 @@ function loadMap(){
         //<-- map events
         map.on('click', function(evt) {
             map.forEachFeatureAtPixel(evt.pixel, function(feature) {
-                const featureId = feature.getId();
-                shipinfos.dispatchEvent(changeinfosEvent({mmsi: featureId}));
-                panels.dispatchEvent(showpanelEvent({panel_id: "shipinfos"}));
+                const mmsi = feature.getId();
+                highlightShip(mmsi);
+                showShip(mmsi);
                 return true;
             }, {
                 layerFilter: function(layer){
@@ -396,9 +448,9 @@ function loadMap(){
 }
 //-->
 
-function jumpto(coordinates, zoom){
-    let position = fromLonLat(coordinates)
-    view.animate({zoom: zoom, center: position})
-}
+window.showShip = showShip;
 window.jumpto = jumpto;
+window.debouncedOverSearchResult = debouncedOverSearchResult;
+window.outSearchResult = outSearchResult;
+
 // vim: set foldmethod=marker foldmarker=<--,--> :

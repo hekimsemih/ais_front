@@ -1,6 +1,7 @@
 #define MAX_NUM_VERTICES 5
 precision highp int;
 precision highp float;
+uniform float u_hoveredId;
 uniform float u_selectedId;
 
 varying vec2 v_texCoord;
@@ -206,7 +207,7 @@ void main(void) {
     vec2 strokepattern =  vec2(2.,0.)/strokefactor;
     vec4 color = outsidecolor;
 
-    if (v_id == u_selectedId){
+    if (v_id == u_hoveredId){
         symbolcolor.rgb += 0.5;
         //strokefactor += 2.;
     }
@@ -233,11 +234,11 @@ void main(void) {
                 symbolcolor, strokecolor,
                 strokesize, strokepattern);
     }
-    //if (v_id == u_selectedId){
-    //    color = getSquare(texCoord,
-    //            color, vec4(1.,0.,0.,1.),
-    //            strokesize, strokepattern);
-    //}
+    if (v_id == u_selectedId){
+        color = getSquare(texCoord,
+                color, vec4(1.,0.,0.,1.),
+                strokesize, strokepattern);
+    }
     if (color == outsidecolor){
         discard;
     }
