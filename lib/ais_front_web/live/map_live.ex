@@ -4,12 +4,8 @@ defmodule AisFrontWeb.MapLive do
   """
   use Phoenix.LiveView
 
-  alias AisFrontWeb.Live.Component.Shipinfos
-  alias AisFrontWeb.Live.Component.Search
-  alias AisFrontWeb.Live.Component.Svg
-
-  alias AisFrontWeb.Struct.Panels
-  alias AisFrontWeb.Struct.Panel
+  alias AisFrontWeb.Live.Component.{Shipinfos, Search, Svg, None}
+  alias AisFrontWeb.Struct.{Panels, Panel}
 
   def mount(_params, _session, socket) do
     {
@@ -19,15 +15,15 @@ defmodule AisFrontWeb.MapLive do
         page_title: "Watch AIS ships in real time",
         panel_id: nil,
         panels: %Panels{
-          attributions: %Panel{title: "Attributions", icon: "cross.svg", module: Search},
-          configuration: %Panel{title: "Configuration", icon: "cross.svg", module: Search},
-          help: %Panel{title: "Help", icon: "cross.svg", module: Search},
-          infos: %Panel{title: "Easy infos", icon: "cross.svg", module: Search},
-          legends: %Panel{title: "Legends", icon: "cross.svg", module: Search},
-          positions: %Panel{title: "Live positions", icon: "cross.svg", module: Search},
+          attributions: %Panel{title: "Attributions", icon: "cross.svg", module: None},
+          configuration: %Panel{title: "Configuration", icon: "cross.svg", module: None},
+          help: %Panel{title: "Help", icon: "cross.svg", module: None},
+          infos: %Panel{title: "Easy infos", icon: "cross.svg", module: None},
+          legends: %Panel{title: "Legends", icon: "cross.svg", module: None},
+          positions: %Panel{title: "Live positions", icon: "cross.svg", module: None},
           search: %Panel{title: "Search", icon: "search.svg", module: Search},
           shipinfos: %Panel{assigns: %{shipinfos: nil}, title: "Ship Infos", icon: "boat.svg", module: Shipinfos},
-          tools: %Panel{title: "Tools", icon: "cross.svg", module: Search}
+          tools: %Panel{title: "Tools", icon: "cross.svg", module: None}
         }
       )
     }
