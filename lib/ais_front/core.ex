@@ -9,6 +9,30 @@ defmodule AisFront.Core do
   alias AisFront.Core.Shipinfos
   alias AisFront.Core.Shiptype
 
+  defp sanitize_identifier(identifier) do
+    identifier
+    |> String.replace(["%", "_", "\\"], fn c -> "\\#{c}" end)
+  end
+
+  @doc """
+  Returns at most limit ship_full infos where identifier is in one of the ship
+  ids (mmsi, callsign or name)
+  """
+  def get_ships_by_identifiers(identifier, limit \\ 10) do
+    id_str = "%#{sanitize_identifier(identifier)}%"
+    from(
+      si in Shipinfos,
+      join: st in Shiptype,
+      on: st.type_id == si.ship_type,
+      where: si.valid_position == true and (
+        like(type(si.mmsi, :string), ^id_str)
+        or ilike(si.callsign, ^id_str)
+        or ilike(si.name, ^id_str)
+      ),
+      limit: ^limit)
+      |> Repo.all
+  end
+
   @doc """
   Returns the list of core_shipinfos.
 
