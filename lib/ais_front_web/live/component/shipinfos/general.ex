@@ -32,17 +32,17 @@ defmodule AisFrontWeb.Live.Component.Shipinfos.General do
     <article id="shipinfos-jump">
       <h4>Jump to ship:</h4>
       <ul>
-        <li class="jump-button" title="large" onclick="jumpto(<%= coordinates(@shipinfos) %>, 6)">
+        <li class="jump-button" title="large" onclick="jumpto(<%= FullShipinfos.str_coordinates(@shipinfos) %>, 6)">
           <svg class="large-jump">
             <%= live_component @socket, Svg, image: "boat.svg" %>
           </svg>
         </li>
-        <li class="jump-button" title="medium" onclick="jumpto(<%= coordinates(@shipinfos) %>, 12)">
+        <li class="jump-button" title="medium" onclick="jumpto(<%= FullShipinfos.str_coordinates(@shipinfos) %>, 12)">
           <svg class="medium-jump">
             <%= live_component @socket, Svg, image: "boat.svg" %>
           </svg>
         </li>
-        <li class="jump-button" title="close" onclick="jumpto(<%= coordinates(@shipinfos) %>, 18)">
+        <li class="jump-button" title="close" onclick="jumpto(<%= FullShipinfos.str_coordinates(@shipinfos) %>, 18)">
           <svg class="close-jump">
             <%= live_component @socket, Svg, image: "boat.svg" %>
           </svg>

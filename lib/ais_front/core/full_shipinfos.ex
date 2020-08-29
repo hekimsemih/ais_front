@@ -212,4 +212,11 @@ defmodule AisFront.Core.FullShipinfos do
              |> Coordinates.to_tuple_string(opts)
     "#{y}, #{x}"
   end
+  @doc """
+  Return the coordinates as string to be consumed by javascript
+  """
+  def str_coordinates(%{point: %Point{coordinates: coordinates}}) do
+    {x, y} = coordinates
+    "[#{x},#{y}]"
+  end
 end
