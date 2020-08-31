@@ -6,6 +6,9 @@ $grey-dark: #444
 $grey-darkest: #111
 $blue: #66f
 
+$panel_margin: 0.5em
+$panel_width: 26em
+
 .hide
   display: none
 
@@ -69,117 +72,75 @@ body
     line-height: 1.2em
     font-size: 1.2rem
 
-  #map-header
+  #panels
+    .panel-title
+      $color: $white
+      $bg-color: $blue
+      color: $color
+      background-color: $bg-color
+      display: flex
+      align-items: center
+      height: 2.5em
+      padding: 0.5em
 
-  #map-main
-    flex-grow: 1
-    position: relative
-    overflow: hidden
-
-    #map
-      height: 100%
-
-    #panel-menu
-      position: absolute
-      right: 0
-      top: 0
-      max-height: 100%
-      overflow: auto
-      scrollbar-width: none
-
-      ul,li
-        margin: 0
-      ul
-        // background-color: #eee
-        display: flex
-        align-items: flex-end
-        flex-direction: column
-      li
-        line-height: 0
-        list-style: none
-        padding: 0.2em
-        background-color: $white
-        margin-bottom: 0.2em
-        transition: padding-right 0.2s, border-radius 0.2s
-        &:hover
-          background-color: $grey-lightest
-          padding-right: 1em
-          cursor: pointer
-      li.active,li:hover
-        border-radius: 0 0 0 0.8em
-        transition: padding-right 0.2s, border-radius 0.2s
-      li.active
-        padding-right: 2em
-      .menu-item
+      .icon
         width: 2em
         height: 2em
+        fill: $white
+        stroke: $white
+      h2,button
+        margin: 0
+      h2
+        flex-grow: 1
+        margin-left: 0.5em
+
+      .close-button
+        background-color: $bg-color
+        color: inherit
+        padding: 0
+        line-height: 0
+        letter-spacing: -.1em
+        width: 2.5em
+        height: 2.5em
+        &:hover
+          cursor: pointer
+          svg
+            fill: $grey-dark
+            stroke: $grey-dark
         svg
-          fill: black
-          stroke: black
+          fill: $white
+          stroke: $white
 
-    $panel_margin: 0.5em
-    $panel_width: 26em
-    .panel
-      strong
-        color: black
 
-      $bg-color: $white
-      width: $panel_width
-      max-height: calc(100% - 2*#{$panel_margin})
-      margin: $panel_margin
-      position: absolute
+    .panel.left
       top: 0em
-      background-color: $bg-color
-      box-shadow: 0.2em 0.2em 0.8em scale-color($bg-color, $lightness: -80%)
       display: flex
       flex-direction: column
       border-radius: 0 0 0.8em 0
+      width: $panel_width
+      max-height: calc(100% - 2*#{$panel_margin})
 
-      .panel-title
-        $color: $white
-        $bg-color: $blue
-        color: $color
-        background-color: $bg-color
-        display: flex
-        align-items: center
-        height: 2.5em
-        padding: 0.5em
+    .panel.left.in
+      left: 0em
+      transition: left 0.2s
+    .panel.left.out
+      left: calc(-#{$panel_width} - 2*#{$panel_margin})
+      transition: left 0.2s
 
-        .icon
-          width: 2em
-          height: 2em
-          fill: $white
-          stroke: $white
-        h2,button
-          margin: 0
-        h2
-          flex-grow: 1
-          margin-left: 0.5em
+    .panel
+      $bg-color: $white
+      margin: $panel_margin
+      position: absolute
+      background-color: $bg-color
+      box-shadow: 0.2em 0.2em 0.8em scale-color($bg-color, $lightness: -80%)
 
-        .close-button
-          background-color: $bg-color
-          color: inherit
-          padding: 0
-          line-height: 0
-          letter-spacing: -.1em
-          width: 2.5em
-          height: 2.5em
-          &:hover
-            cursor: pointer
-            svg
-              fill: $grey-dark
-              stroke: $grey-dark
-          svg
-            fill: $white
-            stroke: $white
+      strong
+        color: black
 
       .panel-content
         padding: 1em
         overflow: auto
         scrollbar-width: thin
-
-        #search-ship-query
-          height: 3em
 
         .field-wrapper
           $wrapper-height: 3em
@@ -208,9 +169,6 @@ body
             td
               text-align: right
               color: $grey-dark
-
-        hr
-          color: $white
 
         details
           background: white
@@ -243,66 +201,112 @@ body
             td
               text-align: right
 
-        #shipinfos-dimensions
-          table
-            td
-              text-align: center
-          #boat-repr
-            max-width: 100%
-            height: calc(0.6*#{$panel-width} - 6em)
-        #shipinfos-jump
-          ul
-            display: flex
-            justify-content: space-around
-            padding: 0
-            li.jump-button
-              list-style: none
-              width: 3em
-              height: 3em
-              display: flex
-              justify-content: center
-              align-items: center
-              border: 1px solid $grey-lightest
-              border-radius: 3em
-              cursor: pointer
-            li.jump-button:hover
-              background-color: $grey-lightest
-            .large-jump
-              width: 1em
-              height: 1em
-            .medium-jump
-              width: 1.8em
-              height: 1.8em
-            .close-jump
-              width: 2.6em
-              height: 2.6em
-        #search-ship-results
-          background-color: white
-          border-bottom-right-radius: 0.5em
-          padding: 0.5em
-          padding-left: 0
-          margin-bottom: 0.5em
-          .ship-result
-            cursor: pointer
-            &:hover
-              .field-icon
-                border-right: 1px solid $blue
-            table
-              border-collapse: collapse
+#map-header
 
-    .panel.in
-      left: 0em
-      transition: left 0.2s
-    .panel.out
-      left: calc(-#{$panel_width} - 2*#{$panel_margin})
-      transition: left 0.2s
+#map-main
+  flex-grow: 1
+  position: relative
+  overflow: hidden
 
-  #map-footer
+#map
+  height: 100%
+
+#panel-menu
+  position: absolute
+  right: 0
+  top: 0
+  max-height: 100%
+  overflow: auto
+  scrollbar-width: none
+
+  ul,li
+    margin: 0
+  ul
+    // background-color: #eee
     display: flex
-    justify-content: space-between
+    align-items: flex-end
+    flex-direction: column
+  li
+    line-height: 0
+    list-style: none
+    padding: 0.2em
+    background-color: $white
+    margin-bottom: 0.2em
+    transition: padding-right 0.2s, border-radius 0.2s
+    &:hover
+      background-color: $grey-lightest
+      padding-right: 1em
+      cursor: pointer
+  li.active,li:hover
+    border-radius: 0 0 0 0.8em
+    transition: padding-right 0.2s, border-radius 0.2s
+  li.active
+    padding-right: 2em
+  .menu-item
+    width: 2em
+    height: 2em
+    svg
+      fill: black
+      stroke: black
 
-    .map-footer-item
-      color: $white
+#shipinfos-dimensions
+  table
+    td
+      text-align: center
+  #boat-repr
+    max-width: 100%
+    height: calc(0.6*#{$panel_width} - 6em)
+
+#shipinfos-jump
+  ul
+    display: flex
+    justify-content: space-around
+    padding: 0
+    li.jump-button
+      list-style: none
+      width: 3em
+      height: 3em
+      display: flex
+      justify-content: center
+      align-items: center
+      border: 1px solid $grey-lightest
+      border-radius: 3em
+      cursor: pointer
+    li.jump-button:hover
+      background-color: $grey-lightest
+    .large-jump
+      width: 1em
+      height: 1em
+    .medium-jump
+      width: 1.8em
+      height: 1.8em
+    .close-jump
+      width: 2.6em
+      height: 2.6em
+
+#search-ship-query
+  height: 3em
+
+#search-ship-results
+  background-color: white
+  border-bottom-right-radius: 0.5em
+  padding: 0.5em
+  padding-left: 0
+  margin-bottom: 0.5em
+  .ship-result
+    cursor: pointer
+    &:hover
+      .field-icon
+        border-right: 1px solid $blue
+    table
+      border-collapse: collapse
+
+#map-footer
+  display: flex
+  justify-content: space-between
+
+  .map-footer-item
+    color: $white
 
 @keyframes invisiblyGrowFontSize
   0%
