@@ -16,8 +16,8 @@ config :ais_front, AisFrontWeb.Endpoint,
   secret_key_base: "0gs9bBLG9Sww5n3wl/tRVyhjN+RXOC4zuO940bQXQHMZbHdocAOL1G8FHgcewk31",
   render_errors: [view: AisFrontWeb.ErrorView, accepts: ~w(html json), layout: false],
   pubsub_server: AisFront.PubSub,
-  live_view: [signing_salt: "oh/8LJJ4"],
-  http: [compress: true]
+  live_view: [signing_salt: "oh/8LJJ4"]
+  # http: [compress: true]
 
 # Configures Elixir's Logger
 config :logger, :console,
