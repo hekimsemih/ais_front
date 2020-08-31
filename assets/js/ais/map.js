@@ -189,7 +189,9 @@ lvs.hooks.ChangeInfos = {
 };
 //-->
 //<-- Webgl attributes
-// We need size, angle, color, shape to properly draw a ship
+
+// /!\ TODO: Duplicate with css stylesheet here
+// See comments below for a potential alternative /!\
 const color_dict = {
     special: "#FF00E0",
     cargo: "#FF8700",
@@ -217,7 +219,39 @@ function color_to_int(color){
     res |= b << 0;
     return res;
 }
+// function rgb_from_style(type){
+//     let elem = document.querySelector('.ship-icon.'+type);
+//     let rgb = window.getComputedStyle(elem).getPropertyValue('fill');
+//     rgb = rgb.slice(4,-1).split(', ').map(val => parseInt(val));
+//     return rgb;
+// }
+// const color_dict = {
+//     special: rgb_from_style("special"),
+//     cargo: rgb_from_style("cargo"),
+//     wing: rgb_from_style("wing"),
+//     sailing: rgb_from_style("sailing"),
+//     unspecified: rgb_from_style("unspecified"),
+//     highspeed: rgb_from_style("highspeed"),
+//     pleasure: rgb_from_style("pleasure"),
+//     fishing: rgb_from_style("fishing"),
+//     tanker: rgb_from_style("tanker"),
+//     tug: rgb_from_style("tug"),
+//     sar: rgb_from_style("sar"),
+//     other: rgb_from_style("other"),
+//     passenger: rgb_from_style("passenger")
+// }
+// console.log(color_dict);
+// function color_to_int(color){
+//     const [r,g,b] = color;
+//     let res = 0;
+//     res |= r << 16;
+//     res |= g << 8;
+//     res |= b << 0;
+//     return res;
+// }
 
+
+// We need size, angle, color, shape to properly draw a ship
 const customLayerAttributes = [{
     name: 'size',
     callback: function (feature) {

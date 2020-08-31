@@ -15,7 +15,7 @@
   </marker>
  </defs>
  <g id="boat-layer">
-  <path id="boat" d="m15 5v40h55l20-20-20-20z" style="fill:#444;stroke-width:1px;stroke:#000"/>
+  <path id="boat" d="m15 5v40h55l20-20-20-20z"/>
  </g>
  <g id="tot-dims">
   <path id="boat-width" class="tot-dim" d="m5 45v-40" style="fill:none;marker-end:url(#marker2894);marker-start:url(#marker2946);stroke-dasharray:2, 1;stroke:#000"/>
