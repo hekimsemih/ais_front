@@ -15,15 +15,15 @@ defmodule AisFrontWeb.MapLive do
         page_title: "Watch AIS ships in real time",
         panel_id: nil,
         panels: %Panels{
-          attributions: %Panel{title: "Attributions", icon: "cross.svg", module: None},
-          configuration: %Panel{title: "Configuration", icon: "cross.svg", module: None},
-          help: %Panel{title: "Help", icon: "cross.svg", module: None},
-          infos: %Panel{title: "Easy infos", icon: "cross.svg", module: None},
-          legends: %Panel{title: "Legends", icon: "cross.svg", module: None},
-          positions: %Panel{title: "Live positions", icon: "cross.svg", module: None},
-          search: %Panel{title: "Search", icon: "search.svg", module: Search},
-          shipinfos: %Panel{assigns: %{shipinfos: nil}, title: "Ship Infos", icon: "boat.svg", module: Shipinfos},
-          tools: %Panel{title: "Tools", icon: "cross.svg", module: None}
+          attributions: %Panel{title: "Attributions", icon: "cross.svg", position: "center", module: None},
+          configuration: %Panel{title: "Configuration", icon: "cross.svg", position: "left", module: None},
+          help: %Panel{title: "Help", icon: "cross.svg", position: "center", module: None},
+          infos: %Panel{title: "Easy infos", icon: "cross.svg", position: "bottom", module: None},
+          legends: %Panel{title: "Legends", icon: "cross.svg", position: "bottom", module: None},
+          positions: %Panel{title: "Live positions", icon: "cross.svg", position: "bottom", module: None},
+          search: %Panel{title: "Search", icon: "search.svg", position: "left", module: Search},
+          shipinfos: %Panel{assigns: %{shipinfos: nil}, title: "Ship Infos", icon: "boat.svg", position: "left", module: Shipinfos},
+          tools: %Panel{title: "Tools", icon: "cross.svg", position: "left", module: None}
         }
       )
     }

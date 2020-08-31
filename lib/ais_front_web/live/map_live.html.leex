@@ -32,9 +32,9 @@
     <section id="panels"
              phx-hook="PanelVisibility"
       >
-      <%= for {id, %Panel{assigns: panel_assigns, icon: icon, module: module, title: title}} <- @panels do %>
+      <%= for {id, %Panel{assigns: panel_assigns, icon: icon, module: module, position: position, title: title}} <- @panels do %>
       <article id="<%= id %>"
-               class="panel<%= if @panel_id == id, do: " in", else: " out" %>"
+               class="panel <%= position %><%= if @panel_id == id, do: " in", else: " out" %>"
       >
         <header class="panel-title">
           <svg class="icon">
