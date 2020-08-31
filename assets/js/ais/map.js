@@ -429,6 +429,7 @@ function loadMap(){
 
         //<-- map events
         map.on('click', function(evt) {
+            highlightShip(-1);
             map.forEachFeatureAtPixel(evt.pixel, function(feature) {
                 const mmsi = feature.getId();
                 highlightShip(mmsi);

@@ -30,6 +30,34 @@ defmodule AisFront.Core do
         or ilike(si.name, ^id_str)
       ),
       limit: ^limit)
+      |> select([si, st], %{
+        mmsi: si.mmsi,
+        callsign: si.callsign,
+        cog: si.cog,
+        destination: si.destination,
+        dim_bow: si.dim_bow,
+        dim_port: si.dim_port,
+        dim_starboard: si.dim_starboard,
+        dim_stern: si.dim_stern,
+        draught: si.draught,
+        eta: si.eta,
+        heading: si.heading,
+        imo: si.imo,
+        name: si.name,
+        navstat: si.navstat,
+        pac: si.pac,
+        point: si.point,
+        rot: si.rot,
+        ship_type: si.ship_type,
+        sog: si.sog,
+        time: si.time,
+        valid_position: si.valid_position,
+
+        type_short_name: st.short_name,
+        type_name: st.name,
+        type_summary: st.summary,
+        type_details: st.details
+      })
       |> Repo.all
   end
 
@@ -123,7 +151,7 @@ defmodule AisFront.Core do
         type: st.short_name
       }
     )
-    |> limit(1000)
+    # |> limit(1000)
     |> Repo.all
   end
 

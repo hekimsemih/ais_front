@@ -99,8 +99,6 @@ body
         list-style: none
         padding: 0.2em
         background-color: $white
-        border: 1px solid $grey-dark
-        border-right: 0
         margin-bottom: 0.2em
         transition: padding-right 0.2s, border-radius 0.2s
         &:hover
@@ -108,7 +106,6 @@ body
           padding-right: 1em
           cursor: pointer
       li.active,li:hover
-        border-right: 0
         border-radius: 0 0 0 0.8em
         transition: padding-right 0.2s, border-radius 0.2s
       li.active
@@ -181,23 +178,36 @@ body
         overflow: auto
         scrollbar-width: thin
 
+        #search-ship-query
+          height: 3em
+
         .field-wrapper
           $wrapper-height: 3em
           display: flex
-          height: $wrapper-height
-          border: 1px solid $grey
-          border-radius: 0.5em
+          align-items: center
+          border-bottom-right-radius: 0.5em
+          margin-bottom: 0.5em
           padding: 0.5em
           background-color: white
-          svg
+          svg.field-icon
             border-right: 1px solid $white
             width: $wrapper-height
+            height: $wrapper-height
             padding-right: 0.5em
+          .field-content
+            padding-left: 0.5em
+            flex: 1
           input
             min-width: 0
             height: 100%
             border: 0
-            padding-left: 0.5em
+          table
+            width: 100%
+            th
+              text-align: left
+            td
+              text-align: right
+              color: $grey-dark
 
         hr
           color: $white
@@ -205,8 +215,8 @@ body
         details
           background: white
           padding: 0.5em
-          border: 1px solid $grey-lightest
-          border-radius: 0.5em
+          border-bottom-right-radius: 0.5em
+          margin-bottom: 0.5em
           summary:hover
             cursor: pointer
         details[open] .details-content
@@ -215,17 +225,16 @@ body
           animation-delay: 0ms, 100ms
           padding: 0.5em
           color: $grey-dark
-        table
+
+        table#raw-content
           margin-top: 0.5em
           border-collapse: collapse
           width: 100%
           tr,th,td
             border: 0
-
-        table#raw-content
           tr
             &:nth-child(odd)
-              background-color: $grey-lightest
+              background-color: $white
             th
               text-align: left
               color: black
@@ -253,7 +262,7 @@ body
               display: flex
               justify-content: center
               align-items: center
-              border: 1px solid black
+              border: 1px solid $grey-lightest
               border-radius: 3em
               cursor: pointer
             li.jump-button:hover
@@ -269,30 +278,17 @@ body
               height: 2.6em
         #search-ship-results
           background-color: white
-          border: 1px solid $grey
-          border-radius: 0.5em
+          border-bottom-right-radius: 0.5em
           padding: 0.5em
-          table
-            margin: 0
-          tr.ship-result
-            height: 3em
+          padding-left: 0
+          margin-bottom: 0.5em
+          .ship-result
             cursor: pointer
             &:hover
-              background-color: $white
-            td.ship-result-icon
-              border-right: 1px solid $white
-              width: 3em
-              svg
-                width: 3em
-                height: 3em
-            td.ship-result-data
-              padding-left: 0.5em
+              .field-icon
+                border-right: 1px solid $blue
             table
-              th
-                text-align: left
-              td
-                text-align: right
-
+              border-collapse: collapse
 
     .panel.in
       left: 0em
