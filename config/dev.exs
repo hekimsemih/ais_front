@@ -1,12 +1,14 @@
 use Mix.Config
 
+database_hostname = System.get_env("POSTGRES_HOST") || "localhost"
+
 # Configure your database
 # DB for Elixir
 config :ais_front, AisFront.Repo,
   username: "postgres",
   password: "postgres",
   database: "ais_front_dev",
-  hostname: "localhost",
+  hostname: database_hostname,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
@@ -15,7 +17,7 @@ config :ais_front, AisFront.RepoBack,
   username: "postgres",
   password: "postgres",
   database: "ais",
-  hostname: "localhost",
+  hostname: database_hostname,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10,
   types: AisFront.PostgresTypes
