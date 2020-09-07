@@ -12,7 +12,7 @@ config :ais_front,
 
 # Configures the endpoint
 config :ais_front, AisFrontWeb.Endpoint,
-  url: [host: "localhost"],
+  url: [host: nil],
   secret_key_base: "0gs9bBLG9Sww5n3wl/tRVyhjN+RXOC4zuO940bQXQHMZbHdocAOL1G8FHgcewk31",
   render_errors: [view: AisFrontWeb.ErrorView, accepts: ~w(html json), layout: false],
   pubsub_server: AisFront.PubSub,
