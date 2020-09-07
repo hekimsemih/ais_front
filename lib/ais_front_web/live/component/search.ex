@@ -1,6 +1,8 @@
 defmodule AisFrontWeb.Live.Component.Search do
   use Phoenix.LiveComponent
 
+  import Phoenix.HTML.Form
+
   alias AisFront.Core.FullShipinfos
   alias AisFrontWeb.Live.Component.Svg
   alias AisFront.Core
@@ -21,7 +23,7 @@ defmodule AisFrontWeb.Live.Component.Search do
             <svg class="field-icon">
               <%= live_component @socket, Svg, image: "search.svg" %>
             </svg>
-            <input type="text" name="query" class="field-content" placeholder="search for mmsi, name or callsign..." autofocus phx-debounce="200" />
+            <%= text_input :search, :query, class: "field-content", placeholder: "search for mmsi, name or callsign...", autofocus: true, "phx-debounce": "200" %>
           </div>
         </form>
         <div id="search-ship-results" <%= if @results == [], do: "class=hide" %>>
@@ -54,7 +56,7 @@ defmodule AisFrontWeb.Live.Component.Search do
       </section>
     """
   end
-  def handle_event("search", %{"query" => query}, socket) do
+  def handle_event("search", %{"search" => %{"query" => query}}, socket) do
     results = case query do
       "" -> []
       query -> Core.get_ships_by_identifiers(query)
