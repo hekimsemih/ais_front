@@ -9,7 +9,7 @@ import VectorSource from 'ol/source/Vector';
 import OSM from 'ol/source/OSM';
 import Stamen from 'ol/source/Stamen';
 import GeoJSON from 'ol/format/GeoJSON';
-import Renderer from 'ol/renderer/webgl/PointsLayer';
+import Renderer from './CustomRenderer.js';
 
 import {defaults as defaultInteractions, DragRotateAndZoom} from 'ol/interaction';
 import {RegularShape, Fill, Style, Stroke, Text} from 'ol/style';
