@@ -4,12 +4,12 @@
 # remember to add this file to your .gitignore.
 import Config
 
-postgres_user = 
+postgres_user =
   System.get_env("POSTGRES_USER") ||
     raise """
     environment variable POSTGRES_USER is missing.
     """
-postgres_pass = 
+postgres_pass =
   System.get_env("POSTGRES_PASS") ||
     raise """
     environment variable POSTGRES_PASS is missing.
@@ -43,9 +43,9 @@ config :ais_front, AisFront.RepoBack,
   types: AisFront.PostgresTypes
 
 secret_key_base =
-  System.get_env("SECRET_KEY_BASE") ||
+  System.get_env("ELIXIR_SECRET") ||
     raise """
-    environment variable SECRET_KEY_BASE is missing.
+    environment variable ELIXIR_SECRET is missing.
     You can generate one by calling: mix phx.gen.secret
     """
 
