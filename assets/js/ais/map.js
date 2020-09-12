@@ -84,7 +84,7 @@ const webglSource = new VectorSource({
     format: new GeoJSON(),
     // url: 'http://192.168.8.157:8600/geoserver/ais/wms?service=WMS&version=1.1.1&request=GetMap&layers=ais%3Ashipinfos&bbox=-180.0%2C-90.0%2C180.0%2C90.0&width=768&height=384&srs=EPSG%3A4326&format=geojson&time=PT5M/PRESENT',
     // url: 'data/geojson/ais.json',
-    url: 'http://192.168.8.181:4000/api/ships?view=large_map',
+    url: window.location.origin + '/api/ships?view=large_map',
     crossOrigin: 'anonymous',
 });
 
