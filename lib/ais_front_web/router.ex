@@ -16,7 +16,7 @@ defmodule AisFrontWeb.Router do
   scope "/", AisFrontWeb do
     pipe_through :browser
 
-    live "/", PageLive, :index, layout: {AisFrontWeb.LayoutView, :root}
+    get "/", HomePageController, :index
   end
 
   scope "/map", AisFrontWeb do
