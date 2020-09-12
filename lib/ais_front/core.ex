@@ -151,7 +151,7 @@ defmodule AisFront.Core do
         type: st.short_name
       }
     )
-    # |> limit(1000)
+    |> where([si, st], si.time > datetime_add(^DateTime.utc_now(), -5, "minute"))
     |> Repo.all
   end
 
