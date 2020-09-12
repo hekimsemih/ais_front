@@ -51,7 +51,7 @@ secret_key_base =
 
 config :ais_front, AisFrontWeb.Endpoint,
   http: [
-    port: String.to_integer(System.get_env("PORT") || "80"),
+    port: String.to_integer(System.get_env("PORT") || "4000"),
     transport_options: [socket_opts: [:inet6]]
   ],
   secret_key_base: secret_key_base
