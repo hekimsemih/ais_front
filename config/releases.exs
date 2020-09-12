@@ -9,10 +9,10 @@ postgres_user =
     raise """
     environment variable POSTGRES_USER is missing.
     """
-postgres_pass =
-  System.get_env("POSTGRES_PASS") ||
+postgres_password =
+  System.get_env("POSTGRES_PASSWORD") ||
     raise """
-    environment variable POSTGRES_PASS is missing.
+    environment variable POSTGRES_PASSWORD is missing.
     """
 back_database_host =
   System.get_env("BACK_DATABASE_HOST") ||
@@ -28,16 +28,16 @@ front_database_host =
 config :ais_front, AisFront.Repo,
   # ssl: true,
   username: postgres_user,
-  password: postgres_pass,
-  hostname: front_database_url,
+  password: postgres_password,
+  hostname: front_database_host,
   database: "ais_front_dev",
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10")
 
 config :ais_front, AisFront.RepoBack,
   # ssl: true,
   username: postgres_user,
-  password: postgres_pass,
-  hostname: back_database_url,
+  password: postgres_password,
+  hostname: back_database_host,
   database: "ais",
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
   types: AisFront.PostgresTypes
