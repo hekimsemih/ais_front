@@ -30,7 +30,7 @@ config :ais_front, AisFront.Repo,
   username: postgres_user,
   password: postgres_password,
   hostname: front_database_host,
-  database: "ais_front_dev",
+  database: "ais_front",
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10")
 
 config :ais_front, AisFront.RepoBack,
