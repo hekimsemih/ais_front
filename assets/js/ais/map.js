@@ -144,7 +144,7 @@ function outSearchResult(){
 //-->
 //<--Liveview hooks
 const lvs = window.liveSocket;
-lvs.enableDebug()
+// lvs.enableDebug()
 
 lvs.hooks.LoadMap = {
     mounted(){
@@ -400,8 +400,8 @@ function loadMap(){
                     hitVertexShader:  results.hitvertex,
                     hitFragmentShader: results.hitfragment,
                 };
-                console.log(options.hitVertexShader);
-                console.log(options.hitFragmentShader);
+                // console.log(options.hitVertexShader);
+                // console.log(options.hitFragmentShader);
                 return new Renderer(this, options);
             }
         }
