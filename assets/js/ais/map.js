@@ -69,14 +69,9 @@ const view = new View({
 
 const map = new Map({
     controls: defaultControls().extend([mousePositionControl]),
-    // target: 'map',
     interactions: defaultInteractions().extend([
         new DragRotateAndZoom()
     ]),
-    // layers: [
-    //     osmLayer,
-    //     webglLayer,
-    // ],
     view: view
 });
 
@@ -352,7 +347,6 @@ const uniforms = {
         transform[4] = 0;
         transform[5] = 0;
 
-        // console.log(transform);
         return transform;
     },
 };
@@ -449,20 +443,6 @@ function loadMap(){
                 shipLabelPoint.setCoordinates(feature.getGeometry().getCoordinates());
                 shipLabelText.setText(feature.get('description'));
                 shipLabelLayer.setVisible(true);
-
-                // if (!isShowInfos) return false;
-
-                // move that to live view
-                // const positionStr = feature.get('geometry').getCoordinates().join(", ");
-                // const filterKeys = ['time','name','callsign','imo','cog'];
-                // const properties = feature.getKeys()
-                //     .filter(k => filterKeys.includes(k))
-                //     .map(k => `<li><b>${k}:</b> <i>${feature.get(k)}</i></li>`)
-                //     .join('\n');
-                // shipinfos.innerHTML = `<li><b>id:</b> <i>${feature.getId()}</i></li>\n
-                // <li><b>mmsi:</b> <i>${feature.getId().split('.')[1]}</i></li>\n
-                // <li><b>position:</b> <i>${positionStr}</i></li>\n
-                // ${properties}`;
 
                 return true;
             }, {
