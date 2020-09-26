@@ -193,14 +193,14 @@ const color_dict = {
     wing: "#00FFC3",
     sailing: "#00C4FF",
     unspecified: "#969696",
-    highspeed: "#CE00FF",
+    highspeed: "#A200C8",
     pleasure: "#00FF25",
     fishing: "#0002FF",
     tanker: "#D6DD1C",
-    tug: "#ECA02C",
+    tug: "#A1660D",
     sar: "#FF001D",
     other: "#E0E0E0",
-    passenger: "#5FB445"
+    passenger: "#388122"
 }
 function color_to_int(color){
     const [r,g,b] = [
