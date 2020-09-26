@@ -32,10 +32,12 @@ defmodule AisFrontWeb.Live.Component.Shipinfos do
     ~L"""
       <section class="panel-content" phx-hook="ChangeInfos">
         <p>No ship selected. Click on one to see informations about it.</p>
+        <%= if Application.get_env(:ais_front, :environment) == :dev do %>
         <button phx-click="changeinfos" phx-value-mmsi="41291111" phx-target="#shipinfos > .panel-content">41291111</button>
         <button phx-click="changeinfos" phx-value-mmsi="200028527" phx-target="#shipinfos > .panel-content">200028527</button>
         <button phx-click="changeinfos" phx-value-mmsi="201309068" phx-target="#shipinfos > .panel-content">201309068</button>
         <button phx-click="changeinfos" phx-value-mmsi="36770590" phx-target="#shipinfos > .panel-content">36770590</button>
+        <% end %>
       </section>
     """
   end
