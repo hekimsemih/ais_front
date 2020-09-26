@@ -2,6 +2,8 @@ use Mix.Config
 
 database_hostname = System.get_env("POSTGRES_HOST") || "localhost"
 
+config :ais_front, :environment, :dev
+
 # Configure your database
 # DB for Elixir
 config :ais_front, AisFront.Repo,

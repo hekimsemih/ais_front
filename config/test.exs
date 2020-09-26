@@ -1,5 +1,7 @@
 use Mix.Config
 
+config :ais_front, :environment, :test
+
 # Configure your database
 #
 # The MIX_TEST_PARTITION environment variable can be used
