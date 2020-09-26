@@ -349,6 +349,9 @@ const uniforms = {
 
         return transform;
     },
+    u_zoom: function(framestate){
+        return framestate.viewState.zoom;
+    }
 };
 //-->
 //<--Shader promises

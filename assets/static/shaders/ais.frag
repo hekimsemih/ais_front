@@ -15,7 +15,7 @@ float segLen[MAX_NUM_VERTICES];
 float vPerimeter[MAX_NUM_VERTICES];
 const int n = 5;
 
-float strokefactor = 3.;
+float strokefactor = 2.;
 
 vec4 outsidecolor = vec4(0.);
 

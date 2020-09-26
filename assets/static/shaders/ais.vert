@@ -8,6 +8,8 @@ uniform mat4 u_projTransform;
 uniform vec2 u_eyepos;
 uniform vec2 u_eyeposlow;
 
+uniform float u_zoom;
+
 attribute vec2 a_position;
 attribute float a_index;
 attribute float a_size;
@@ -24,7 +26,7 @@ varying float v_color;
 
 void main(void) {
   mat4 offsetMatrix = u_offsetScaleMatrix;
-  float size = a_size;
+  float size = a_size*(u_zoom/25.0) + 15.0;
   if (a_iscircle == 0.){
       float cosangle = cos(a_angle);
       float sinangle = sin(a_angle);
