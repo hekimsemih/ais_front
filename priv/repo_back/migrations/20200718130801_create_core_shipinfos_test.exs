@@ -2,7 +2,7 @@ defmodule AisFront.RepoBack.Migrations.CreateCoreShipinfosTest do
   use Ecto.Migration
 
   def up do
-    if(Mix.env() == :test) do
+    if(Application.get_env(:ais_front, :environment) == :test) do
       execute "CREATE EXTENSION IF NOT EXISTS postgis"
       create table(:core_shipinfos, primary_key: false) do
         add :callsign, :string
@@ -30,7 +30,7 @@ defmodule AisFront.RepoBack.Migrations.CreateCoreShipinfosTest do
     end
   end
   def down do
-    if(Mix.env() == :test) do
+    if(Application.get_env(:ais_front, :environment) == :test) do
       drop table(:core_shipinfos)
     end
   end
