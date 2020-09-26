@@ -10,6 +10,7 @@ defmodule AisFrontWeb.Router do
   end
 
   pipeline :api do
+    plug CORSPlug, origins: "*"
     plug :accepts, ["json"]
   end
 
@@ -30,6 +31,7 @@ defmodule AisFrontWeb.Router do
     pipe_through :api
 
     resources "/ships", ShipinfosController, only: [:index, :show]
+    options "/ships", ShipinfosController, :options
   end
 
   # Enables LiveDashboard only for development
