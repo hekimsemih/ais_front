@@ -94,17 +94,20 @@ let selectedMmsi = -1;
 //-->
 //<-- Functions
 
+// update selected ship
 function highlightShip(mmsi){
     selectedFeature.setInt32(0, mmsi);
     selectedMmsi = mmsi;
 }
 
+// show ship panels and highlight selected ship
 function showShip(mmsi){
     shipinfos.dispatchEvent(changeinfosEvent({mmsi: mmsi}));
     panels.dispatchEvent(showpanelEvent({panel_id: "shipinfos"}));
     highlightShip(mmsi);
 }
 
+// jump to coordinate at zoom level
 function jumpto(coordinates, zoom){
     let position = fromLonLat(coordinates)
     if (zoom)
@@ -113,13 +116,10 @@ function jumpto(coordinates, zoom){
         view.animate({center: position});
 }
 
-function debouncedJumpto(coordinates, zoom){
-    if (debouncedTimeout) clearTimeout(debouncedTimeout);
-    debouncedTimeout = setTimeout(function(){jumpto(coordinates, zoom)}, 200);
-}
-
+// Need refinement
 let oldCoordinates = [0,0];
 let oldMmsi = -1;
+// action when mouseover search results: highlight and jump to ship
 function overSearchResult(coordinates, mmsi){
     oldMmsi = selectedMmsi;
     oldCoordinates = view.getCenter();
@@ -127,10 +127,12 @@ function overSearchResult(coordinates, mmsi){
     jumpto(coordinates);
 }
 let debouncedTimeout = null;
+// overSearchResult with a slight delay
 function debouncedOverSearchResult(coordinates, mmsi) {
     if (debouncedTimeout) clearTimeout(debouncedTimeout);
     debouncedTimeout = setTimeout(function(){overSearchResult(coordinates, mmsi)}, 200);
 }
+// action when mouseout of search results
 function outSearchResult(){
     highlightShip(oldMmsi);
     jumpto(oldCoordinates);
