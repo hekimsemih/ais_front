@@ -143,17 +143,23 @@ function outSearchResult(){
 const lvs = window.liveSocket;
 // lvs.enableDebug()
 
+const maploadedEvent = () => { return new CustomEvent("maploaded") };
+let mapElt = null;
 lvs.hooks.LoadMap = {
     mounted(){
+        mapElt = this.el;
         loadMap();
+        this.el.addEventListener("maploaded", (e) => {
+            this.pushEvent("maploaded", {});
+        });
         mousePositionControl.setMap(map);
-        shipsInView()
+        shipsInView();
     },
     updated(){
         map.setTarget(document.getElementById("map"));
         map.setTarget("map");
         mousePositionControl.setMap(map);
-        shipsInView()
+        shipsInView();
     }
 };
 
@@ -460,6 +466,13 @@ function loadMap(){
 
         map.on('moveend', function(evt){
             shipsInView();
+        });
+
+        var sourceEventListener = webglSource.on('change', function(e) {
+            if (webglSource.getState() == 'ready') {
+                mapElt.dispatchEvent(maploadedEvent()); // hitting the server... really worth it?
+                webglSource.un('change', sourceEventListener);
+            }
         });
         //-->
 

@@ -13,6 +13,7 @@ defmodule AisFrontWeb.MapLive do
       assign(
         socket,
         page_title: "Watch AIS ships in real time",
+        loaded: false,
         panel_id: nil,
         panels: %Panels{
           attributions: %Panel{title: "Attributions", icon: "cross.svg", position: "center", module: None},
@@ -27,6 +28,13 @@ defmodule AisFrontWeb.MapLive do
         }
       )
     }
+  end
+
+  @doc """
+  `maploaded` event will set the `loaded` params to true
+  """
+  def handle_event("maploaded", _payload, socket) do
+    {:noreply, assign(socket, loaded: true)}
   end
 
   @doc """

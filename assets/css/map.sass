@@ -10,7 +10,7 @@ $panel_margin: 0.5em
 $panel_width: 26em
 
 .hide
-  display: none
+  display: none !important
 
 .ship-icon, #boat-repr
   stroke: black
@@ -210,6 +210,25 @@ body
 
 #map
   height: 100%
+
+#loading-indicator
+  width: 100%
+  height: 100%
+  position: absolute
+  z-index: 1
+  background-color: rgba(255,255,255,0.8)
+  display: flex
+  justify-content: center
+  align-items: center
+  flex-direction: column
+
+  h1
+    font-size: 2.5em
+    color: $blue
+
+  svg.indicator
+    width: 30%
+    height: 30%
 
 #panel-menu
   position: absolute

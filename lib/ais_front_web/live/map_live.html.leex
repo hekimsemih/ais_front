@@ -11,6 +11,12 @@
 
   <section id="map-main">
 
+    <div id="loading-indicator"<%= if @loaded, do: " class=hide" %>>
+      <h1>Data is loading, please wait...</h1>
+      <svg class="indicator">
+        <%= live_component @socket, Svg, image: "ripple.svg" %>
+      </svg>
+    </div>
     <section id="map" phx-hook="LoadMap"></section>
 
     <nav id="panel-menu">
