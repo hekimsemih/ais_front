@@ -170,12 +170,10 @@ lvs.hooks.PanelVisibility = {
     mounted(){
         panels = this.el;
         this.el.addEventListener("showpanel", (e) => {
-            this.pushEvent("showpanel", e.detail, (reply, ref) =>
-                console.log("not sure what to do here"));
+            this.pushEvent("showpanel", e.detail);
         });
         this.el.addEventListener("hidepanel", (e) => {
-            this.pushEvent("hidepanel", e.detail, (reply, ref) =>
-                console.log("not sure what to do here"));
+            this.pushEvent("hidepanel", e.detail);
         });
     }
 };
@@ -185,8 +183,7 @@ lvs.hooks.ChangeInfos = {
     mounted(){
         shipinfos = this.el;
         this.el.addEventListener("changeinfos", (e) => {
-            this.pushEventTo("#shipinfos > .panel-content", "changeinfos", e.detail, (reply, ref) =>
-                console.log("not sure what to do here"));
+            this.pushEventTo("#shipinfos > .panel-content", "changeinfos", e.detail);
         });
     }
 };
