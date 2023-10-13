@@ -5,7 +5,7 @@
 # is restricted to this project.
 
 # General application configuration
-use Mix.Config
+use Config
 
 config :ais_front,
   ecto_repos: [AisFront.Repo, AisFront.RepoBack]
