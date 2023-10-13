@@ -1,4 +1,4 @@
-use Mix.Config
+use Config
 
 config :ais_front, :environment, :test
 
