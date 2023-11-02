@@ -7,8 +7,8 @@ defmodule AisFront.Units.ROT do
   @si_unit :rad_sec
   @unit_si_ratio %{
     rad_sec: 1,
-    deg_sec: :math.pi |> Decimal.cast |> Decimal.div(180),
-    deg_min: :math.pi |> Decimal.cast |> Decimal.div(180*60)
+    deg_sec: "3.141592653589793" |> Decimal.new |> Decimal.div(180),
+    deg_min: "3.141592653589793" |> Decimal.new |> Decimal.div(180*60)
   }
   @possible_units Map.keys(@unit_si_ratio) ++ [:ais]
 
