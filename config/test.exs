@@ -1,4 +1,4 @@
-use Config
+import Config
 
 config :ais_front, :environment, :test
 
