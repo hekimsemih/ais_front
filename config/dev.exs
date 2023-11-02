@@ -1,4 +1,4 @@
-use Config
+import Config
 
 database_hostname = System.get_env("POSTGRES_HOST") || "localhost"
 
