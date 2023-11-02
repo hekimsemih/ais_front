@@ -5,7 +5,7 @@
 # is restricted to this project.
 
 # General application configuration
-use Config
+import Config
 
 config :ais_front,
   ecto_repos: [AisFront.Repo, AisFront.RepoBack]
