@@ -5,7 +5,8 @@ defmodule AisFront.Units.Angle do
   defstruct value: %Decimal{}, unit: :rad
 
   @si_unit :rad
-  @unit_si_ratio %{rad: 1, dd: :math.pi |> Decimal.cast |> Decimal.div(180)}
+  @pi_value Decimal.new("3.141592653589793")
+  @unit_si_ratio %{rad: 1, dd: Decimal.div(@pi_value, Decimal.new("180"))}
   @standard_units Map.keys(@unit_si_ratio)
   @compound_degree_units [:dm, :dms]
 
